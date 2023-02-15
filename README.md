@@ -1,6 +1,6 @@
 # computational_musicology - Homework week 6
 
-PLEASE DO NOT SHOW THIS PORTFOLIO IN CLASS
+PLEASE DO NOT SHOW THIS PORTFOLIO IN CLASS MADE IN R
 
 My corpus for my final portfolio is a playlist of songs that I have labeled as "Numbers I Like." This playlist contains a diverse range of songs, making it difficult to categorize into a specific genre. The majority of the songs in my playlist fall under the categories of pop, 70s, 80s, 90s musical, and some rock, but there are also elements of other genres present.
 
