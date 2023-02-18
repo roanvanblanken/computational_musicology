@@ -16,7 +16,11 @@
   
   .logo {
     cursor: pointer;
-    height: 14px;
+    margin-right: auto;
+  }
+  
+  .logo img {
+    height: 50px;
   }
   
   .nav__links a,
