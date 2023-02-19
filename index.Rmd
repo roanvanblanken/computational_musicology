@@ -1,79 +1,33 @@
 ---
-title: "My Faves"
+title: "Computational Musicology - Final Portfolio"
 author: "Roan van Blanken"
 output: 
   flexdashboard::flex_dashboard:
-    theme: flatly
+    orientation: columns
 ---
 
 ```{r setup, include=FALSE}
 library(flexdashboard)
-```
-
-
-```{R}
-library(tidyverse)
+library(Rspotify)
 library(spotifyr)
-library(knitr)
-library(ggplot2)
-library(plotly)
-library(shiny)
-require(gridExtra)
-library(tidymodels)
-library(ggdendro)
-library(protoclust)
-library(heatmaply)
+library(purrr)
 library(dplyr)
-set.seed(5)
-```
-```{R}
-circshift <- function(v, n) {if (n == 0) v else c(tail(v, n), head(v, -n))}
-                                    
-    # C     C#    D     Eb    E     F     F#    G     Ab    A     Bb    B 
-major_chord <- 
-    c(1,    0,    0,    0,    1,    0,    0,    1,    0,    0,    0,    0)
-minor_chord <- 
-    c(1,    0,    0,    1,    0,    0,    0,    1,    0,    0,    0,    0)
-seventh_chord <- 
-    c(1,    0,    0,    0,    1,    0,    0,    1,    0,    0,    1,    0)
-major_key <- 
-    c(6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88)
-minor_key <-
-    c(6.33, 2.68, 3.52, 5.38, 2.60, 3.53, 2.54, 4.75, 3.98, 2.69, 3.34, 3.17)
-key_templates <-
-    tribble(
-        ~name    , ~template,
-        'Gb:maj', circshift(major_key,  6),
-        'Bb:min', circshift(minor_key, 10),
-        'Db:maj', circshift(major_key,  1),
-        'F:min' , circshift(minor_key,  5),
-        'Ab:maj', circshift(major_key,  8),
-        'C:min' , circshift(minor_key,  0),
-        'Eb:maj', circshift(major_key,  3),
-        'G:min' , circshift(minor_key,  7),
-        'Bb:maj', circshift(major_key, 10),
-        'D:min' , circshift(minor_key,  2),
-        'F:maj' , circshift(major_key,  5),
-        'A:min' , circshift(minor_key,  9),
-        'C:maj' , circshift(major_key,  0),
-        'E:min' , circshift(minor_key,  4),
-        'G:maj' , circshift(major_key,  7),
-        'B:min' , circshift(minor_key, 11),
-        'D:maj' , circshift(major_key,  2),
-        'F#:min', circshift(minor_key,  6),
-        'A:maj' , circshift(major_key,  9),
-        'C#:min', circshift(minor_key,  1),
-        'E:maj' , circshift(major_key,  4),
-        'G#:min', circshift(minor_key,  8),
-        'B:maj' , circshift(major_key, 11),
-        'D#:min', circshift(minor_key,  3))
+library(ggplot2)
 ```
 
-Corpus {data-orientation=rows}
-===================================== 
-    
-### My Corpus
-    
+Corpus
+=====================================
+
+Column {data-width=750}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+
+```
+**OLD VERSION**
+
 My corpus for my final portfolio is a playlist of songs that I have labeled as "Numbers I Like." This playlist contains a diverse range of songs, making it difficult to categorize into a specific genre. The majority of the songs in my playlist fall under the categories of pop, 70s, 80s, 90s musical, and some rock, but there are also elements of other genres present.
 
 I chose this playlist as my corpus because it is a collection of songs that hold personal meaning to me. Most of the songs have a specific memory or emotion attached to it, making it a unique and representative representation of my musical taste. 
@@ -85,8 +39,60 @@ There are several tracks in my corpus that are either extremely typical or atypi
 
 In conclusion, my "Numbers I Like" playlist is a unique corpus that represents my personal musical taste, showcasing a diverse range of songs that hold personal meaning. Its nature provides a range of opportunities for comparisons and analyses, allowing for an interesting and reflective final portfolio.
 
-    
-### .
+Column {data-width=250}
+-----------------------------------------------------------------------
 
-![](music artist.jpg)
+### Chart B
 
+Homework - week 7
+=====================================
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+### Plot 1
+
+```{r}
+my_faves <- get_playlist_audio_features("", "6pl0C7qbIl5uoY3Tdf82oa")
+
+# Start with modes
+my_faves <- my_faves %>%
+  mutate(mode = ifelse(mode == 0, "Minor", "Major"))
+
+# Create the scatterplot
+my_faves %>%
+  ggplot(aes(x = valence, y = energy, size = loudness, color = mode)) +
+  geom_point() +
+  geom_rug(linewidth = 0.1) +
+  scale_x_continuous(limits = c(0, 1), breaks = c(0, 0.50, 1), minor_breaks = NULL) +
+  scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.50, 1), minor_breaks = NULL) +
+  scale_color_brewer(type = "qual", palette = "Paired", name = "Mode") +
+  scale_size_continuous(trans = "exp", guide = "none") +
+  theme_light() +
+  labs(x = "Valence", y = "Energy",
+       title = "My Favorite Tracks",
+       subtitle = "Plotting valence, energy, and loudness",
+       caption = "Data source: Spotify API\nAuthor: Roan van Blanken")
+```
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+### Plot 2
+
+```{r}
+
+# Get playlists
+my_faves <- get_playlist_audio_features("", "6pl0C7qbIl5uoY3Tdf82oa")
+soft_10s <- get_playlist_audio_features("", "37i9dQZF1DX1uHCeFHcn8X")
+
+# Create the density plot
+ggplot() +
+  geom_density(aes(x = valence, color = "My Favorites"), data = my_faves, fill = "red", alpha = 0.5) +
+  geom_density(aes(x = valence, color = "Soft 10s"), data = soft_10s, fill = "purple", alpha = 0.5) +
+  scale_color_manual(values = c("My Favorites" = "red", "Soft 10s" = "purple")) +
+  theme_light() +
+  labs(x = "Valence", y = "Density",
+       title = "Valence Distribution of My Favorite Tracks and Soft 10s",
+       subtitle = "Based on Spotify audio features",
+       caption = "Data source: Spotify API\nAuthor: Roan van Blanken") +
+  guides(color = guide_legend(override.aes = list(fill = c("red", "orchid")))) 
+```
