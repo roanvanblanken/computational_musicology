@@ -4,6 +4,7 @@ author: "Roan van Blanken"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
+    self_contained: false
 ---
 
 ```{r setup, include=FALSE}
@@ -13,6 +14,8 @@ library(purrr)
 library(dplyr)
 library(ggplot2)
 library(plotly)
+library(tidyverse)
+library(compmus)
 ```
 
 Corpus
