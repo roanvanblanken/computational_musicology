@@ -127,7 +127,7 @@ plotly_object1 <- ggplotly(plot1)
 plot1
 ```
 
-Column {data-width=500}
+Column {data-width=0}
 -----------------------------------------------------------------------
 ### Plot 2
 
@@ -147,5 +147,52 @@ plot2 <- ggplot() +
 plotly_object2 <- ggplotly(plot2)
 
 plot2
+
+```
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+### Plot 3
+
+```{r}
+# Load required packages
+library(spotifyr)
+library(shiny)
+library(shinydashboard)
+
+# Define UI for dashboard
+ui <- dashboardPage(
+  dashboardHeader(title = "Spotify Playlist Dashboard"),
+  dashboardSidebar(
+    sidebarMenu(
+      menuItem("Playlist", tabName = "playlist", icon = icon("list"))
+    )
+  ),
+  dashboardBody(
+    tabItems(
+      tabItem(tabName = "playlist",
+              tableOutput("playlist_table"))
+    )
+  )
+)
+
+# Define server for dashboard
+server <- function(input, output) {
+  # Get playlist information from Spotify API
+  playlist_data <- get_playlist_tracks("6pl0C7qbIl5uoY3Tdf82oa", market = "US")
+  # Extract track information from playlist data
+  playlist_table <- data.frame(
+    track_name = unlist(lapply(playlist_data$items, function(x) x$track$name)),
+    artist_name = unlist(lapply(playlist_data$items, function(x) x$track$artists[[1]]$name)),
+    album_name = unlist(lapply(playlist_data$items, function(x) x$track$album$name)),
+    release_date = unlist(lapply(playlist_data$items, function(x) x$track$album$release_date)),
+    stringsAsFactors = FALSE
+  )
+  # Display playlist table
+  output$playlist_table <- renderTable(playlist_table)
+}
+
+# Run dashboard app
+shinyApp(ui, server)
 
 ```
