@@ -18,49 +18,34 @@ library(tidyverse)
 library(compmus)
 ```
 
-Corpus
+Unlocking the Secrets of my musical taste
 =====================================
 
 Column {data-width=500}
 -----------------------------------------------------------------------
 
-### Chart A
+Music is an essential part of many people's lives, and with digital music streaming platforms like Spotify, discovering new music has become more accessible than ever. Spotify's algorithm suggests playlists based on users' listening habits and preferences. One of the most popular playlists on Spotify is "New Music Friday," updated every week with new releases from various artists. It is curated by Spotify's editorial team, who select the latest and most popular releases from various genres. However, the question remains: how accurately does this playlist align with personal musical taste and style?
 
-```{r}
+This final portfolio explores the inner workings of Spotify's music recommendation algorithm, attempting to create a predictive model that accurately predicts a user's preferred musical genres and styles. The analysis will focus on two playlists - "Songs I Like" and "Songs I Dislike" - to identify patterns in personal musical taste. The "Songs I Like" playlist is a collection of songs that hold personal meaning, representing various genres such as pop, 70s, 80s, 90s musical, and rock. In contrast, the "Songs I Dislike" playlist consists of heavy metal and drill rap songs that do not match personal taste.
 
-```
-**OLD VERSION**
+By analyzing the features of songs in both playlists, this portfolio aims to provide insights into personal musical preferences and use this information to train a machine learning model. The goal is to create a predictive model that accurately predicts preferred musical genres and styles. Additionally, the analysis will investigate whether this model can predict which songs from popular playlists like "New Music Friday" would resonate with the user, allowing for a more personalized and tailored listening experience.
 
-My corpus for my final portfolio is a playlist of songs that I have labeled as "Numbers I Like." This playlist contains a diverse range of songs, making it difficult to categorize into a specific genre. The majority of the songs in my playlist fall under the categories of pop, 70s, 80s, 90s musical, and some rock, but there are also elements of other genres present.
-
-I chose this playlist as my corpus because it is a collection of songs that hold personal meaning to me. Most of the songs have a specific memory or emotion attached to it, making it a unique and representative representation of my musical taste. 
-
-One of the interesting aspects of my corpus is the lack of cohesiveness in terms of genre. This allows for a wide range of comparisons to be made, as well as a glimpse into my own  taste. The tracks in my corpus can be compared in terms of popularity, musical style, and cultural significance. I expect that the most popular songs in my playlist will have a different musical style than the less popular ones, and that the songs with cultural significance will be unique in comparison to the others.
-The tracks in my corpus are representative of my personal musical taste, but may not accurately represent the wider musical landscape. The playlist was created through my personal listening habits and does not take into account other sources of music I listen to outside of Spotify.
-
-There are several tracks in my corpus that are either extremely typical or atypical. For example, the song "Bohemian Rhapsody" by Queen is an atypical track in my playlist due to its cultural significance and popularity, compared to other songs in the playlist. On the other hand, a typical track in my playlist may be a pop song that is popular but holds less cultural significance.
-
-In conclusion, my "Numbers I Like" playlist is a unique corpus that represents my personal musical taste, showcasing a diverse range of songs that hold personal meaning. Its nature provides a range of opportunities for comparisons and analyses, allowing for an interesting and reflective final portfolio.
+In summary, this portfolio tries to offer an understanding of Spotify's music recommendation algorithm and the potential for using machine learning to predict a user's preferred musical genres and styles.
 
 Column {data-width=250}
 -----------------------------------------------------------------------
 
-### Chart B
+<iframe src="https://open.spotify.com/embed/playlist/6pl0C7qbIl5uoY3Tdf82oa?utm_source=generator" width="100%" height="100%" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
 
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/6pl0C7qbIl5uoY3Tdf82oa?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
 
 Column {data-width=250}
 -----------------------------------------------------------------------
 
-### Chart C
+<iframe src="https://open.spotify.com/embed/playlist/4bJQX5w7W4wEnHLmWqUIVY?utm_source=generator&theme=0" width="100%" height="100%" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
 
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/4bJQX5w7W4wEnHLmWqUIVY?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-
-Homework - week 7
+What are the features that make songs likable? {.storyboard}
 =====================================
 
-Column {data-width=500}
------------------------------------------------------------------------
 ### Plot 1
 
 ```{r}
@@ -86,8 +71,6 @@ my_faves %>%
        caption = "Data source: Spotify API\nAuthor: Roan van Blanken")
 ```
 
-Column {data-width=500}
------------------------------------------------------------------------
 ### Plot 2
 
 ```{r}
@@ -109,12 +92,7 @@ ggplot() +
   guides(color = guide_legend(override.aes = list(fill = c("red", "orchid")))) 
 ```
 
-Corpus Idea
-=====================================
-
-Column {data-width=500}
------------------------------------------------------------------------
-### Plot 1
+### Plot 3
 
 ```{r}
 
@@ -139,9 +117,7 @@ plotly_object1 <- ggplotly(plot1)
 plot1
 ```
 
-Column {data-width=500}
------------------------------------------------------------------------
-### Plot 2
+### Plot 4
 
 ```{r}
 
