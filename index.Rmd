@@ -16,9 +16,21 @@ library(ggplot2)
 library(plotly)
 library(tidyverse)
 library(compmus)
+
+# Get playlists
+songs_i_like <- get_playlist_audio_features("", "6pl0C7qbIl5uoY3Tdf82oa")
+
+songs_i_like <- songs_i_like %>%
+  mutate(mode = ifelse(mode == 0, "Minor", "Major"))
+
+songs_i_dislike <- get_playlist_audio_features("", "4bJQX5w7W4wEnHLmWqUIVY")
+
+songs_i_dislike <- songs_i_dislike %>%
+  mutate(mode = ifelse(mode == 0, "Minor", "Major"))
+
 ```
 
-Unlocking the Secrets of my musical taste
+Understanding Spotifys recommendation
 =====================================
 
 Column {data-width=500}
@@ -43,97 +55,206 @@ Column {data-width=250}
 
 <iframe src="https://open.spotify.com/embed/playlist/4bJQX5w7W4wEnHLmWqUIVY?utm_source=generator&theme=0" width="100%" height="100%" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
 
-What are the features that make songs likable? {.storyboard}
+Feature analysis {.storyboard}
 =====================================
 
-### Plot 1
+### Relationship between Valence, Energy, Loudness, and Mode for the songs I like
 
 ```{r}
-my_faves <- get_playlist_audio_features("", "6pl0C7qbIl5uoY3Tdf82oa")
-
-# Start with modes
-my_faves <- my_faves %>%
-  mutate(mode = ifelse(mode == 0, "Minor", "Major"))
-
-# Create the scatterplot
-my_faves %>%
+# Create a scatterplot
+songs_i_like %>%
   ggplot(aes(x = valence, y = energy, size = loudness, color = mode)) +
   geom_point() +
-  geom_rug(linewidth = 0.1) +
   scale_x_continuous(limits = c(0, 1), breaks = c(0, 0.50, 1), minor_breaks = NULL) +
   scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.50, 1), minor_breaks = NULL) +
-  scale_color_brewer(type = "qual", palette = "Paired", name = "Mode") +
-  scale_size_continuous(trans = "exp", guide = "none") +
+  scale_color_manual(values = c("darkblue", "lightblue"), name = "Mode", labels = c("Minor", "Major")) +
+  scale_size_continuous(trans = "exp", range = c(1, 10), guide = guide_legend(override.aes = list(size = c(1, 3, 5)))) +
   theme_light() +
   labs(x = "Valence", y = "Energy",
-       title = "My Favorite Tracks",
+       title = "Songs I like",
        subtitle = "Plotting valence, energy, and loudness",
        caption = "Data source: Spotify API\nAuthor: Roan van Blanken")
 ```
 
-### Plot 2
+---
+
+Based from this scatterplot it seems like I tend to like songs that are loud, with a range of loudness values represented in the plot. I also seem to be drawn to songs that are high-energy, as they're clustered towards the upper-right portion of the plot where both the energy and loudness values are high.
+
+As for the valence of the songs I like, it appears to be centered around 0.5, but mostly falls between 0.5 and 1.0. This suggests to me that I tend to prefer songs with a positive emotional valence, which could contribute to their appeal.
+
+One interesting thing I noticed in the plot is that the songs I like are equally distributed between major and minor keys, as indicated by the color coding in the plot. This suggests to me that the mode of the songs I like doesn't strongly influence my preference for them.
+
+Overall, this plot provides insight into the features that make songs likable to me, highlighting the importance of loudness, energy, valence, and mode in my musical taste.
+
+### Relationship between Valence, Energy, Loudness, and Mode for the songs I dislike
 
 ```{r}
+# Create a scatterplot
+songs_i_dislike %>%
+  ggplot(aes(x = valence, y = energy, size = loudness, color = mode)) +
+  geom_point() +
+  scale_x_continuous(limits = c(0, 1), breaks = c(0, 0.50, 1), minor_breaks = NULL) +
+  scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.50, 1), minor_breaks = NULL) +
+  scale_color_manual(values = c("darkred", "lightcoral")) +
+  scale_size_continuous(trans = "exp", range = c(1, 10), guide = guide_legend(override.aes = list(size = c(1, 3, 5, 7)))) +
+  theme_light() +
+  labs(x = "Valence", y = "Energy",
+       title = "Songs I dislike",
+       subtitle = "Plotting valence, energy, loudness, and mode",
+       caption = "Data source: Spotify API\nAuthor: Roan van Blanken")
+```
 
-# Get playlists
-my_faves <- get_playlist_audio_features("", "6pl0C7qbIl5uoY3Tdf82oa")
-soft_10s <- get_playlist_audio_features("", "37i9dQZF1DX1uHCeFHcn8X")
+---
 
-# Create the density plot
+Based on the scatterplot of songs I dislike, it seems that they are generally less loud compared to the songs I like. While they still tend to have high energy, they often have a lower valence. This suggests to me that I may prefer songs that are more uplifting or positive in emotional tone, rather than those that are more somber or negative.
+
+Interestingly, like the songs I like, the songs I dislike are similarly distributed between major and minor keys, as indicated by the color coding in the plot. This seems to suggest that the mode of a song is not a major factor in whether or not I like it.
+
+Overall, this scatterplot provides insight into the musical features that I find unappealing in songs, highlighting the importance of loudness, energy, and valence in my musical taste.
+
+### Zooming in on Valence
+
+```{r}
 ggplot() +
-  geom_density(aes(x = valence, color = "My Favorites"), data = my_faves, fill = "red", alpha = 0.5) +
-  geom_density(aes(x = valence, color = "Soft 10s"), data = soft_10s, fill = "purple", alpha = 0.5) +
-  scale_color_manual(values = c("My Favorites" = "red", "Soft 10s" = "purple")) +
+  geom_density(aes(x = valence, fill = "Songs I like"), data = songs_i_like, alpha = 0.5) +
+  geom_density(aes(x = valence, fill = "Songs I dislike"), data = songs_i_dislike, alpha = 0.5) +
+  scale_fill_manual(values = c("red", "blue"), name = "") +
   theme_light() +
   labs(x = "Valence", y = "Density",
-       title = "Valence Distribution of My Favorite Tracks and Soft 10s",
-       subtitle = "Based on Spotify audio features",
+       title = "Valence Distribution",
+       subtitle = "Comparison of Songs I like and Songs I dislike",
        caption = "Data source: Spotify API\nAuthor: Roan van Blanken") +
-  guides(color = guide_legend(override.aes = list(fill = c("red", "orchid")))) 
+  guides(fill = guide_legend(override.aes = list(alpha = 0.5)))
+
 ```
 
-### Plot 3
+---
+
+### Zooming in on Energy
 
 ```{r}
-
-# Get playlists
-songs_i_like <- get_playlist_audio_features("", "6pl0C7qbIl5uoY3Tdf82oa")
-songs_i_dislike <- get_playlist_audio_features("", "4bJQX5w7W4wEnHLmWqUIVY")
-
-# Create the density plot
-plot1 <- ggplot() +
-  geom_density(aes(x = speechiness, color = "Songs I like"), data = songs_i_like, fill = "lightblue", alpha = 0.5) +
-  geom_density(aes(x = speechiness, color = "Songs I dislike"), data = songs_i_dislike, fill = "lightpink", alpha = 0.5) +
-  scale_color_manual(values = c("Songs I like" = "lightblue", "Songs I dislike" = "lightpink")) +
+ggplot() +
+  geom_bar(aes(x = as.numeric(cut(energy, breaks = 10)) + 0.2, fill = "Songs I like"), 
+           data = songs_i_like, alpha = 0.5, width = 0.4) +
+  geom_bar(aes(x = as.numeric(cut(energy, breaks = 10)) - 0.2, fill = "Songs I dislike"), 
+           data = songs_i_dislike, alpha = 0.5, width = 0.4) +
+  scale_fill_manual(values = c("lightgreen", "coral"), name = "", 
+                    breaks = c("Songs I like", "Songs I dislike"),
+                    labels = c("Songs I like", "Songs I dislike")) +
+  scale_x_continuous(breaks = 1:10, labels = 1:10, name = "Energy") +
   theme_light() +
-  labs(x = "Speechiness", y = "Density",
-       title = "Speechiness Distribution of My Favorite Tracks and Songs I dislike",
-       subtitle = "Based on Spotify audio features",
+  labs(y = "Density",
+       title = "Energy Distribution",
+       subtitle = "Comparison of Songs I like and Songs I dislike",
        caption = "Data source: Spotify API\nAuthor: Roan van Blanken") +
-  guides(color = guide_legend(override.aes = list(fill = c("lightpink", "lightblue"))))
+  guides(fill = guide_legend(override.aes = list(alpha = 0.5)))
 
-plotly_object1 <- ggplotly(plot1)
-
-plot1
 ```
 
-### Plot 4
+---
+
+### Zooming in on Loudness
 
 ```{r}
-
-# Create the scatter plot
-plot2 <- ggplot() +
-  geom_point(aes(x = instrumentalness, y = energy, color = "Songs I like"), data = songs_i_like, alpha = 0.5) +
-  geom_point(aes(x = instrumentalness, y = energy, color = "Songs I dislike"), data = songs_i_dislike, alpha = 0.5) +
-  scale_color_manual(values = c("Songs I like" = "green", "Songs I dislike" = "orange")) +
+ggplot() +
+  geom_violin(aes(x = factor(1), y = loudness, fill = "Songs I like"), data = songs_i_like, alpha = 0.5, width = 0.7, trim = FALSE) +
+  geom_violin(aes(x = factor(2), y = loudness, fill = "Songs I dislike"), data = songs_i_dislike, alpha = 0.5, width = 0.7, trim = FALSE) +
+  scale_fill_manual(values = c("#F8766D", "#00BFC4"), name = "", 
+                    breaks = c("Songs I like", "Songs I dislike"),
+                    labels = c("Songs I like", "Songs I dislike")) +
   theme_light() +
-  labs(x = "Instrumentalness", y = "Energy",
-       title = "Instrumentalness and Energy of My Favorite Tracks and Songs I dislike",
-       subtitle = "Based on Spotify audio features",
-       caption = "Data source: Spotify API\nAuthor: Roan van Blanken")
-
-plotly_object2 <- ggplotly(plot2)
-
-plot2
+  labs(x = "", y = "Loudness",
+       title = "Loudness Distribution",
+       subtitle = "Comparison of Songs I like and Songs I dislike",
+       caption = "Data source: Spotify API\nAuthor: Roan van Blanken") +
+  guides(fill = guide_legend(override.aes = list(alpha = 0.5)))
 
 ```
+
+Chromagram
+=====================================
+
+Overview
+--------------------------------------------------
+
+### Chart A
+
+A chromagram is a visual representation of the distribution of pitches in a musical recording. Comparing the chromagrams of two songs, "State of Unrest" from the playlist of disliked songs and "Shut up and Dance" from the playlist of liked songs, reveals interesting differences in their pitch distribution. In "State of Unrest," there is a strong concentration of pitches around the D chord, indicating a relatively stable harmonic structure. On the other hand, "Shut up and Dance" shows more variation in pitch distribution, with a wider range of pitches around the F#, G#, and A# chords. This suggests that "Shut up and Dance" has a more complex harmonic structure with more varied chord progressions. These differences in pitch distribution could contribute to the overall appeal of the songs and could be further explored in future analyses.
+
+Column 2
+--------------------------------------------------
+
+### State of Unrest
+
+```{r}
+metal <-
+  get_tidy_audio_analysis("3u4djE2yAEkKMWJEUOOJyT") |>
+  select(segments) |>
+  unnest(segments) |>
+  select(start, duration, pitches)
+
+metal |>
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
+  compmus_gather_chroma() |> 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c()
+```
+
+### Shut Up and Dance
+
+```{r}
+dance <-
+  get_tidy_audio_analysis("0kzw2tRyuL9rzipi5ntlIy") |>
+  select(segments) |>
+  unnest(segments) |>
+  select(start, duration, pitches)
+
+dance |>
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
+  compmus_gather_chroma() |> 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c() +
+  theme(
+    plot.background = element_rect(fill = "#f5f5f5", color = NA),
+    panel.grid = element_blank(),
+    axis.line = element_line(color = "black"),
+    axis.text = element_text(color = "black"),
+    legend.position = "bottom"
+  ) +
+  ggtitle("Chromagram of 'Shut Up and Dance'") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+Conclusion
+=====================================
+
+Column 1
+--------------------------------------------------
+
+### Conclusion
+
+Based on the insights gained from the feature analysis, it appears that there are clear patterns in the musical features that I find appealing and unappealing in songs. This raises the possibility of developing a classification model to predict whether or not I would like a particular song based on its acoustic features.
+
+For example, a decision tree model could be trained on a dataset of songs that I have rated as either liked or disliked, using features such as loudness, energy, valence, and mode as predictors. The resulting model could then be used to predict the likelihood of me liking a new song based on its acoustic features.
+
+While the plots provide some valuable insights into the musical features that I find appealing or unappealing, it's important to note that these are just a few of the many features that could potentially influence my musical taste. A more accurate classification model would need to take into account a broader range of features, such as tempo, rhythm, instrumentation, and genre, among others. Additionally, the model would need to be trained on a larger and more diverse set of songs to ensure that it can accurately classify songs that I like or dislike across a wider range of styles and genres. Nevertheless, the insights gained from these plots provide a good starting point for developing a more comprehensive model of my musical taste.

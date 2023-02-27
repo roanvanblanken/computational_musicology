@@ -53,27 +53,37 @@ ggplot() +
        caption = "Data source: Spotify API\nAuthor: Roan van Blanken") +
   guides(fill = guide_legend(override.aes = list(alpha = 0.5)))
 
+#bar
 ggplot() +
-  geom_density(aes(x = speechiness, fill = "Songs I like"), data = songs_i_like, alpha = 0.5) +
-  geom_density(aes(x = speechiness, fill = "Songs I dislike"), data = songs_i_dislike, alpha = 0.5) +
-  scale_fill_manual(values = c("red", "blue"), name = "") +
+  geom_bar(aes(x = as.numeric(cut(energy, breaks = 10)) + 0.2, fill = "Songs I like"), 
+           data = songs_i_like, alpha = 0.5, width = 0.4) +
+  geom_bar(aes(x = as.numeric(cut(energy, breaks = 10)) - 0.2, fill = "Songs I dislike"), 
+           data = songs_i_dislike, alpha = 0.5, width = 0.4) +
+  scale_fill_manual(values = c("lightgreen", "coral"), name = "", 
+                    breaks = c("Songs I like", "Songs I dislike"),
+                    labels = c("Songs I like", "Songs I dislike")) +
+  scale_x_continuous(breaks = 1:10, labels = 1:10, name = "Energy") +
   theme_light() +
-  labs(x = "Speechiness", y = "Density",
-       title = "Speechiness Distribution",
+  labs(y = "Density",
+       title = "Energy Distribution",
        subtitle = "Comparison of Songs I like and Songs I dislike",
        caption = "Data source: Spotify API\nAuthor: Roan van Blanken") +
   guides(fill = guide_legend(override.aes = list(alpha = 0.5)))
 
 ggplot() +
-  geom_density(aes(x = energy, fill = "Songs I like"), data = songs_i_like, alpha = 0.5) +
-  geom_density(aes(x = energy, fill = "Songs I dislike"), data = songs_i_dislike, alpha = 0.5) +
-  scale_fill_manual(values = c("red", "blue"), name = "") +
+  geom_violin(aes(x = factor(1), y = loudness, fill = "Songs I like"), data = songs_i_like, alpha = 0.5, width = 0.7, trim = FALSE) +
+  geom_violin(aes(x = factor(2), y = loudness, fill = "Songs I dislike"), data = songs_i_dislike, alpha = 0.5, width = 0.7, trim = FALSE) +
+  scale_fill_manual(values = c("#F8766D", "#00BFC4"), name = "", 
+                    breaks = c("Songs I like", "Songs I dislike"),
+                    labels = c("Songs I like", "Songs I dislike")) +
   theme_light() +
-  labs(x = "Energy", y = "Density",
-       title = "Energy Distribution",
+  labs(x = "", y = "Loudness",
+       title = "Loudness Distribution",
        subtitle = "Comparison of Songs I like and Songs I dislike",
        caption = "Data source: Spotify API\nAuthor: Roan van Blanken") +
   guides(fill = guide_legend(override.aes = list(alpha = 0.5)))
+
+
 
 ### Plot 3
 

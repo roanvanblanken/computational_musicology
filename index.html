@@ -184,6 +184,9 @@ html, body {
 <img class="mobile-figure" data-mobile-figure-id=fig2 src="index_files/figure-html/unnamed-chunk-2-1.mb.png" />
 <img class="mobile-figure" data-mobile-figure-id=fig3 src="index_files/figure-html/unnamed-chunk-3-1.mb.png" />
 <img class="mobile-figure" data-mobile-figure-id=fig4 src="index_files/figure-html/unnamed-chunk-4-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig5 src="index_files/figure-html/unnamed-chunk-5-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig6 src="index_files/figure-html/unnamed-chunk-6-1.mb.png" />
+<img class="mobile-figure" data-mobile-figure-id=fig7 src="index_files/figure-html/unnamed-chunk-7-1.mb.png" />
 <script type="text/javascript">
 
 
@@ -1872,9 +1875,8 @@ window.FlexDashboardComponents.push({
 
 <div id="dashboard-container">
 
-<div id="unlocking-the-secrets-of-my-musical-taste"
-class="section level1">
-<h1>Unlocking the Secrets of my musical taste</h1>
+<div id="understanding-spotifys-recommendation" class="section level1">
+<h1>Understanding Spotifys recommendation</h1>
 <div id="column" class="section level2" data-width="500">
 <h2>Column</h2>
 <p>Music is an essential part of many people’s lives, and with digital
@@ -1919,37 +1921,149 @@ styles.</p>
 </iframe>
 </div>
 </div>
-<div id="what-are-the-features-that-make-songs-likable"
-class="section level1 storyboard">
-<h1 class="storyboard">What are the features that make songs
-likable?</h1>
-<div id="plot-1" class="section level3">
-<h3>Plot 1</h3>
+<div id="feature-analysis" class="section level1 storyboard">
+<h1 class="storyboard">Feature analysis</h1>
+<div
+id="relationship-between-valence-energy-loudness-and-mode-for-the-songs-i-like"
+class="section level3">
+<h3>Relationship between Valence, Energy, Loudness, and Mode for the
+songs I like</h3>
 <div class="knitr-options" data-fig-width="576" data-fig-height="460">
 
 </div>
 <p><img src="index_files/figure-html/unnamed-chunk-1-1.png" width="576" data-figure-id=fig1 /></p>
+<hr />
+<p>Based from this scatterplot it seems like I tend to like songs that
+are loud, with a range of loudness values represented in the plot. I
+also seem to be drawn to songs that are high-energy, as they’re
+clustered towards the upper-right portion of the plot where both the
+energy and loudness values are high.</p>
+<p>As for the valence of the songs I like, it appears to be centered
+around 0.5, but mostly falls between 0.5 and 1.0. This suggests to me
+that I tend to prefer songs with a positive emotional valence, which
+could contribute to their appeal.</p>
+<p>One interesting thing I noticed in the plot is that the songs I like
+are equally distributed between major and minor keys, as indicated by
+the color coding in the plot. This suggests to me that the mode of the
+songs I like doesn’t strongly influence my preference for them.</p>
+<p>Overall, this plot provides insight into the features that make songs
+likable to me, highlighting the importance of loudness, energy, valence,
+and mode in my musical taste.</p>
 </div>
-<div id="plot-2" class="section level3">
-<h3>Plot 2</h3>
+<div
+id="relationship-between-valence-energy-loudness-and-mode-for-the-songs-i-dislike"
+class="section level3">
+<h3>Relationship between Valence, Energy, Loudness, and Mode for the
+songs I dislike</h3>
 <div class="knitr-options" data-fig-width="576" data-fig-height="460">
 
 </div>
 <p><img src="index_files/figure-html/unnamed-chunk-2-1.png" width="576" data-figure-id=fig2 /></p>
+<hr />
+<p>Based on the scatterplot of songs I dislike, it seems that they are
+generally less loud compared to the songs I like. While they still tend
+to have high energy, they often have a lower valence. This suggests to
+me that I may prefer songs that are more uplifting or positive in
+emotional tone, rather than those that are more somber or negative.</p>
+<p>Interestingly, like the songs I like, the songs I dislike are
+similarly distributed between major and minor keys, as indicated by the
+color coding in the plot. This seems to suggest that the mode of a song
+is not a major factor in whether or not I like it.</p>
+<p>Overall, this scatterplot provides insight into the musical features
+that I find unappealing in songs, highlighting the importance of
+loudness, energy, and valence in my musical taste.</p>
 </div>
-<div id="plot-3" class="section level3">
-<h3>Plot 3</h3>
+<div id="zooming-in-on-valence" class="section level3">
+<h3>Zooming in on Valence</h3>
 <div class="knitr-options" data-fig-width="576" data-fig-height="460">
 
 </div>
 <p><img src="index_files/figure-html/unnamed-chunk-3-1.png" width="576" data-figure-id=fig3 /></p>
+<hr />
 </div>
-<div id="plot-4" class="section level3">
-<h3>Plot 4</h3>
+<div id="zooming-in-on-energy" class="section level3">
+<h3>Zooming in on Energy</h3>
 <div class="knitr-options" data-fig-width="576" data-fig-height="460">
 
 </div>
 <p><img src="index_files/figure-html/unnamed-chunk-4-1.png" width="576" data-figure-id=fig4 /></p>
+<hr />
+</div>
+<div id="zooming-in-on-loudness" class="section level3">
+<h3>Zooming in on Loudness</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" width="576" data-figure-id=fig5 /></p>
+</div>
+</div>
+<div id="chromagram" class="section level1">
+<h1>Chromagram</h1>
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<div id="chart-a" class="section level3">
+<h3>Chart A</h3>
+<p>A chromagram is a visual representation of the distribution of
+pitches in a musical recording. Comparing the chromagrams of two songs,
+“State of Unrest” from the playlist of disliked songs and “Shut up and
+Dance” from the playlist of liked songs, reveals interesting differences
+in their pitch distribution. In “State of Unrest,” there is a strong
+concentration of pitches around the D chord, indicating a relatively
+stable harmonic structure. On the other hand, “Shut up and Dance” shows
+more variation in pitch distribution, with a wider range of pitches
+around the F#, G#, and A# chords. This suggests that “Shut up and Dance”
+has a more complex harmonic structure with more varied chord
+progressions. These differences in pitch distribution could contribute
+to the overall appeal of the songs and could be further explored in
+future analyses.</p>
+</div>
+</div>
+<div id="column-2-1" class="section level2">
+<h2>Column 2</h2>
+<div id="state-of-unrest" class="section level3">
+<h3>State of Unrest</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" width="576" data-figure-id=fig6 /></p>
+</div>
+<div id="shut-up-and-dance" class="section level3">
+<h3>Shut Up and Dance</h3>
+<div class="knitr-options" data-fig-width="576" data-fig-height="460">
+
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" width="576" data-figure-id=fig7 /></p>
+</div>
+</div>
+</div>
+<div id="conclusion" class="section level1">
+<h1>Conclusion</h1>
+<div id="column-1-1" class="section level2">
+<h2>Column 1</h2>
+<div id="conclusion-1" class="section level3">
+<h3>Conclusion</h3>
+<p>Based on the insights gained from the feature analysis, it appears
+that there are clear patterns in the musical features that I find
+appealing and unappealing in songs. This raises the possibility of
+developing a classification model to predict whether or not I would like
+a particular song based on its acoustic features.</p>
+<p>For example, a decision tree model could be trained on a dataset of
+songs that I have rated as either liked or disliked, using features such
+as loudness, energy, valence, and mode as predictors. The resulting
+model could then be used to predict the likelihood of me liking a new
+song based on its acoustic features.</p>
+<p>While the plots provide some valuable insights into the musical
+features that I find appealing or unappealing, it’s important to note
+that these are just a few of the many features that could potentially
+influence my musical taste. A more accurate classification model would
+need to take into account a broader range of features, such as tempo,
+rhythm, instrumentation, and genre, among others. Additionally, the
+model would need to be trained on a larger and more diverse set of songs
+to ensure that it can accurately classify songs that I like or dislike
+across a wider range of styles and genres. Nevertheless, the insights
+gained from these plots provide a good starting point for developing a
+more comprehensive model of my musical taste.</p>
+</div>
 </div>
 </div>
 
