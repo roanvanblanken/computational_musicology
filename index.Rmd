@@ -114,62 +114,89 @@ Overall, this scatterplot provides insight into the musical features that I find
 
 ### Zooming in on Valence
 
-```{r}
-ggplot() +
-  geom_density(aes(x = valence, fill = "Songs I like"), data = songs_i_like, alpha = 0.5) +
-  geom_density(aes(x = valence, fill = "Songs I dislike"), data = songs_i_dislike, alpha = 0.5) +
-  scale_fill_manual(values = c("red", "blue"), name = "") +
-  theme_light() +
-  labs(x = "Valence", y = "Density",
-       title = "Valence Distribution",
-       subtitle = "Comparison of Songs I like and Songs I dislike",
-       caption = "Data source: Spotify API\nAuthor: Roan van Blanken") +
-  guides(fill = guide_legend(override.aes = list(alpha = 0.5)))
+```{r plot}
+plot_ly() %>%
+  add_trace(data = songs_i_like, x = ~valence, type = "histogram", 
+            histnorm = "probabilty density", name = "Songs I like", 
+            marker = list(color = "lightblue", opacity = 0.5)) %>%
+  add_trace(data = songs_i_dislike, x = ~valence, type = "histogram", 
+            histnorm = "probabilty density", name = "Songs I dislike", 
+            marker = list(color = "lightcoral", opacity = 0.5)) %>%
+  layout(xaxis = list(title = "Valence"), yaxis = list(title = "Density"),
+         title = "Valence Distribution",
+         showlegend = TRUE,
+         legend = list(title = "", orientation = "h"),
+         annotations = list(x = 1, y = -0.15, 
+                            text = "Data source: Spotify API\nAuthor: Roan van Blanken",
+                            showarrow = FALSE, xref = "paper", yref = "paper",
+                            font = list(size = 10),
+                            align = "right",
+                            xanchor = "right",
+                            yanchor = "bottom",
+                            pad = list(t = 0, r = 0, b = 10)))
 
 ```
 
 ---
+
+Songs I like seems to have **more valance** than songs I dislike.
 
 ### Zooming in on Energy
 
 ```{r}
-ggplot() +
-  geom_bar(aes(x = as.numeric(cut(energy, breaks = 10)) + 0.2, fill = "Songs I like"), 
-           data = songs_i_like, alpha = 0.5, width = 0.4) +
-  geom_bar(aes(x = as.numeric(cut(energy, breaks = 10)) - 0.2, fill = "Songs I dislike"), 
-           data = songs_i_dislike, alpha = 0.5, width = 0.4) +
-  scale_fill_manual(values = c("lightgreen", "coral"), name = "", 
-                    breaks = c("Songs I like", "Songs I dislike"),
-                    labels = c("Songs I like", "Songs I dislike")) +
-  scale_x_continuous(breaks = 1:10, labels = 1:10, name = "Energy") +
-  theme_light() +
-  labs(y = "Density",
-       title = "Energy Distribution",
-       subtitle = "Comparison of Songs I like and Songs I dislike",
-       caption = "Data source: Spotify API\nAuthor: Roan van Blanken") +
-  guides(fill = guide_legend(override.aes = list(alpha = 0.5)))
+plot_ly() %>%
+  add_trace(data = songs_i_like, x = ~energy, type = "histogram", 
+            histnorm = "probabilty density", name = "Songs I like", 
+            marker = list(color = "lightgreen", opacity = 0.5)) %>%
+  add_trace(data = songs_i_dislike, x = ~energy, type = "histogram", 
+            histnorm = "probabilty density", name = "Songs I dislike", 
+            marker = list(color = "coral", opacity = 0.5)) %>%
+  layout(xaxis = list(title = "Energy"), yaxis = list(title = "Density"),
+         title = "Energy Distribution",
+         showlegend = TRUE,
+         legend = list(title = "", orientation = "h"),
+         annotations = list(x = 1, y = -0.15, 
+                            text = "Data source: Spotify API\nAuthor: Roan van Blanken",
+                            showarrow = FALSE, xref = "paper", yref = "paper",
+                            font = list(size = 10),
+                            align = "right",
+                            xanchor = "right",
+                            yanchor = "bottom",
+                            pad = list(t = 0, r = 0, b = 10)))
+```
+
+---
+
+Songs I like seem to have an energy between **0.7 and 0.9** while the songs I dislike seems to have an energy around **0.95**.
+
+### Zooming in on Loudness
+
+```{r}
+plot_ly() %>%
+  add_trace(data = songs_i_like, x = ~loudness, type = "histogram", 
+            histnorm = "probabilty density", name = "Songs I like", 
+            marker = list(color = "#00BFC4", opacity = 0.5)) %>%
+  add_trace(data = songs_i_dislike, x = ~loudness, type = "histogram", 
+            histnorm = "probabilty density", name = "Songs I dislike", 
+            marker = list(color = "#F8766D", opacity = 0.5))%>%
+  layout(xaxis = list(title = "Loudness"), yaxis = list(title = "Density"),
+         title = "Loudness Distribution",
+         showlegend = TRUE,
+         legend = list(title = "", orientation = "h"),
+         annotations = list(x = 1, y = -0.15, 
+                            text = "Data source: Spotify API\nAuthor: Roan van Blanken",
+                            showarrow = FALSE, xref = "paper", yref = "paper",
+                            font = list(size = 10),
+                            align = "right",
+                            xanchor = "right",
+                            yanchor = "bottom",
+                            pad = list(t = 0, r = 0, b = 10)))
 
 ```
 
 ---
 
-### Zooming in on Loudness
-
-```{r}
-ggplot() +
-  geom_violin(aes(x = factor(1), y = loudness, fill = "Songs I like"), data = songs_i_like, alpha = 0.5, width = 0.7, trim = FALSE) +
-  geom_violin(aes(x = factor(2), y = loudness, fill = "Songs I dislike"), data = songs_i_dislike, alpha = 0.5, width = 0.7, trim = FALSE) +
-  scale_fill_manual(values = c("#F8766D", "#00BFC4"), name = "", 
-                    breaks = c("Songs I like", "Songs I dislike"),
-                    labels = c("Songs I like", "Songs I dislike")) +
-  theme_light() +
-  labs(x = "", y = "Loudness",
-       title = "Loudness Distribution",
-       subtitle = "Comparison of Songs I like and Songs I dislike",
-       caption = "Data source: Spotify API\nAuthor: Roan van Blanken") +
-  guides(fill = guide_legend(override.aes = list(alpha = 0.5)))
-
-```
+Songs I like seems to be **louder** than song I dislike.
 
 Chromagram
 =====================================
