@@ -1,0 +1,165 @@
+---
+title: "index.Rmd"
+output: 
+  flexdashboard::flex_dashboard:
+    storyboard: true
+date: "2023-02-15"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(spotifyr)
+library(compmus)
+```
+
+
+
+Introduction 
+===================================== 
+   
+## What makes a song "Main Character Energy"?
+
+My corpus for Computational Musicology will dive into what makes a song feel like someone is the "main character". Beginning in the summer of 2020, peak of Covid, social media and Gen Z became obsessed with the feeling of making their life resemble a movie. We made highlight reels, posted "low-key" and aesthetic photo dumps, and began romanticizing even our daily coffee runs. We have gone through life looking up to movies like "Perks of Being a Wallflower", "LadyBird", "Breakfast Club", and "Sixteen Candles". Our parents drilled these movies into our heads and deemed them "iconic". It's only right for us to want to become one of these characters ourselves. Songs like "Don't You (Forget About Me)" by Simple Minds, "Heros" by David Bowie, and even more recent songs like "Ribs" by Lorde have been universally recognized as songs that make you feel like you’re in a movie. But what about these songs has this unique effect on people? Yes, some are actually a part of a movie's soundtrack, but others seem to create a movie all on their own. To build my dataset, I will grab soundtracks from iconic coming of age and indie movies along with playlists that describe themselves as "main character" or "in a coming of age movie" or other titles with the same concepts. I hope to investigate the composition of these songs, lyrics, and types of instruments used to get to the bottom of what makes a song "main character energy". I would like to compare real movie soundtracks to songs that have been titled "to make you feel like you're in a movie" by social media or playlist creators. I hypothesize that the later group will show a stronger emphasis on unique and artistic lyrics, while the former will have a more complex musical score to propel the story along. I would also like to compare the playlist songs (not in a movie) to the top hits of today to find how the songs in the playlists have a different feeling than any of the other “favorite songs” of listeners. With the rise of this very specific genre, I think that Spotify will have a large majority of the songs needed for this corpus. I will use other people’s playlists as well as one of my own where I can include all of my favorite songs that give me the “main-character” feeling. Songs that I look forward to analyzing, aside from the ones listed above, are “Wait Just A Little While” by the 502s, “Silver Lining” by Mt. Joy, “Tongue Tied” by Grouplove, and “Electric Love” by BORNS. 
+
+   
+
+Playlist Songs vs Soundtrack Songs {data-navmenu="Visualizations"}
+=====================================  
+
+### Songs in a "Main Character" Playlist vs Songs from a Soundtrack
+    
+```{r, echo=FALSE}
+movieHits <- get_playlist_audio_features("", "37i9dQZF1DXb69UWhjrXsW?si=abdd084bcd204c7a&nd=1")
+mainCharacter <- get_playlist_audio_features("", "37i9dQZF1DX4OzrY981I1W")
+
+movieVibes <-
+  bind_rows(
+    movieHits |> mutate(category = "Songs from a Soundtrack"),
+    mainCharacter |> mutate(category = "Songs from 'Main Character' Playlist")
+  )
+options(repr.plot.width =9, repr.plot.height =9)
+
+
+movieVibes |>                    # Start with awards.
+  ggplot(                     # Set up the plot.
+    aes(
+      x = valence,
+      y = track.popularity,
+      size = instrumentalness,
+      colour = speechiness
+    )
+  ) +
+  geom_point() + 
+  facet_wrap(~ category) +
+  theme_light() +             # Use a simpler theme.
+  labs(                       # Make the titles nice.
+    x = "Valence",
+    y = "Popularity",
+    colour = "Speechiness",
+    size = "Instrumentalness"
+  )+ 
+  scale_colour_gradientn(colours=rainbow(4)) +
+  geom_jitter(position = position_jitter(width = 0.3))
+```
+***
+
+I first wanted to look at the major differences between songs that people think are like a movie and songs that actually are in a movie. The most imediate thing I noticed when looking at the two scatterplots side-by-side was the differences in instrumentalness. I assumed that the soundtrack songs would show more instrumentalness and would focus on the timbre of the instruments to move the plot along. However, it was the opposite. The songs that playlist developers put into their "Main character energy" playlist had much higher levels of instrumentalness and a lower level of speechiness. A possible reason for this is that the lack of lyrics allows the lostener to fill in their own storyline or internal thoughts. The kind of instrumentalness serves as a backdrop to their own internal monologue. A movie does not need this and can have higher levels of speechiness during montages to fill in the silence. It can also be seen that the songs in the playlist are overall more popular than the soundtrack songs. This was expected, since there is a higher criteria from prefessionals in order to be a part of a soundtrack and many songs are made for a specific movie rather than for sheer artistic expression. Both groupings had similar valence and I intend on looking at the comparisons and differences between the two sounds (instruments used, timing, etc.) to get to the bottom of what makes these songs so perfect for a coming-of-age/indie/main character feeling.
+
+
+Chromagram of "Heros" vs Chromagram of "Green Light" {data-navmenu="Visualizations"}
+===================================== 
+
+### Chromagram of "Heros" by David Bowie
+
+```{r, echo=FALSE}
+wood <-
+  get_tidy_audio_analysis("7Jh1bpe76CNTCgdgAdBw4Z?si=9562548f63ae43a9&nd=1") |>
+  select(segments) |>
+  unnest(segments) |>
+  select(start, duration, pitches)
+
+wood |>
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
+  compmus_gather_chroma() |> 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c()
+```
+
+
+### Chromagram of "Green Light" by Lorde
+
+```{r, echo=FALSE}
+wood1 <-
+  get_tidy_audio_analysis("6ie2Bw3xLj2JcGowOlcMhb") |>
+  select(segments) |>
+  unnest(segments) |>
+  select(start, duration, pitches)
+
+wood1 |>
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
+  compmus_gather_chroma() |> 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c()
+```
+
+### Cross Chromagram Analysis of "Heros" and Green Light"
+
+```{r, echo=FALSE}
+compmus_long_distance(
+  wood |> mutate(pitches = map(pitches, compmus_normalise, "chebyshev")),
+  wood1 |> mutate(pitches = map(pitches, compmus_normalise, "chebyshev")),
+  feature = pitches,
+  method = "euclidean"
+) |>
+  ggplot(
+    aes(
+      x = xstart + xduration / 2,
+      width = xduration,
+      y = ystart + yduration / 2,
+      height = yduration,
+      fill = d
+    )
+  ) +
+  geom_tile() +
+  coord_equal() +
+  labs(x = "Heros", y = "Green Light") +
+  theme_minimal() +
+  scale_fill_viridis_c(guide = NULL)
+```
+***
+
+I wanted to focus my chromograms on two songs that I believe create the largest sense of "Main Character Energy" for me, but for two very different reasons. I chose "Heros" by David Bowie because of its appearance in the coming of age movie, "Perks of Being a Wallflower". The scene where the main character, Charlie, lets go and screams out the sunroof while his new friends are driving through a tunnel is a scene that has stuck with me throughout years. The feeling of freedom and opportunity seemed to swell in that moment and the music wasn't just an addition to the scene, it seemed to be the leader of the scene. I got that same feeling when listening to "Green Light" by Lorde. The yells in the background are quite literally urging you to "go for it". For me, it feels like you are running towards something that you have been waiting for. Its opportunistic. I wanted to see how these two songs correlate on a chromographic level. In many ways, I see similar patterns between the two chromograms. Both start with strong energy from D (of which "Heros" continues with throughout the entire song). Both songs have very strong choruses that are shown with bursts of energy. Later in my corpus, I would like to look more into why the D chord may be so prominent in both of these songs and if that pattern is continued into other songs that give off the same "Main Character" vibe.
+
+Conclusion
+=====================================     
+
+### Chart 1
+    
+```{r}
+```
+    
+### Chart 2
+
+```{r}
+```

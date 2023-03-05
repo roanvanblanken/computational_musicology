@@ -36,6 +36,8 @@ Understanding Spotifys recommendation
 Column {data-width=500}
 -----------------------------------------------------------------------
 
+### Introduction
+
 Music is an essential part of many people's lives, and with digital music streaming platforms like Spotify, discovering new music has become more accessible than ever. Spotify's algorithm suggests playlists based on users' listening habits and preferences. One of the most popular playlists on Spotify is "New Music Friday," updated every week with new releases from various artists. It is curated by Spotify's editorial team, who select the latest and most popular releases from various genres. However, the question remains: how accurately does this playlist align with personal musical taste and style?
 
 This final portfolio explores the inner workings of Spotify's music recommendation algorithm, attempting to create a predictive model that accurately predicts a user's preferred musical genres and styles. The analysis will focus on two playlists - "Songs I Like" and "Songs I Dislike" - to identify patterns in personal musical taste. The "Songs I Like" playlist is a collection of songs that hold personal meaning, representing various genres such as pop, 70s, 80s, 90s musical, and rock. In contrast, the "Songs I Dislike" playlist consists of heavy metal and drill rap songs that do not match personal taste.
@@ -47,24 +49,28 @@ In summary, this portfolio tries to offer an understanding of Spotify's music re
 Column {data-width=250}
 -----------------------------------------------------------------------
 
+### Corpus: Songs I like
+
 <iframe src="https://open.spotify.com/embed/playlist/6pl0C7qbIl5uoY3Tdf82oa?utm_source=generator" width="100%" height="100%" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
 
 
 Column {data-width=250}
 -----------------------------------------------------------------------
 
+### Corpus: Songs I dislike
+
 <iframe src="https://open.spotify.com/embed/playlist/4bJQX5w7W4wEnHLmWqUIVY?utm_source=generator&theme=0" width="100%" height="100%" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
 
 Feature analysis {.storyboard}
 =====================================
 
-### Relationship between Valence, Energy, Loudness, and Mode for the songs I like
+### Relationship between Valence, Energy, Loudness, and Mode for the songs I like 
 
 ```{r}
 # Create a scatterplot
-songs_i_like %>%
+old <- songs_i_like %>%
   ggplot(aes(x = valence, y = energy, size = loudness, color = mode)) +
-  geom_point() +
+  geom_point(alpha = 0.5) +
   scale_x_continuous(limits = c(0, 1), breaks = c(0, 0.50, 1), minor_breaks = NULL) +
   scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.50, 1), minor_breaks = NULL) +
   scale_color_manual(values = c("darkblue", "lightblue"), name = "Mode", labels = c("Minor", "Major")) +
@@ -74,6 +80,17 @@ songs_i_like %>%
        title = "Songs I like",
        subtitle = "Plotting valence, energy, and loudness",
        caption = "Data source: Spotify API\nAuthor: Roan van Blanken")
+
+# create scatter plot with size and color options
+p <- plot_ly(songs_i_like, x = ~valence, y = ~energy, 
+             color = ~mode, colors = c("blue", "red"),
+             size = ~loudness, sizes = c(10, 100)) %>%
+  layout(title = "Valence vs. Energy", 
+         xaxis = list(title = "Valence"), 
+         yaxis = list(title = "Energy"))
+
+# show plot
+p
 ```
 
 ---
@@ -92,7 +109,7 @@ Overall, this plot provides insight into the features that make songs likable to
 # Create a scatterplot
 songs_i_dislike %>%
   ggplot(aes(x = valence, y = energy, size = loudness, color = mode)) +
-  geom_point() +
+  geom_point(alpha = 0.5) +
   scale_x_continuous(limits = c(0, 1), breaks = c(0, 0.50, 1), minor_breaks = NULL) +
   scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.50, 1), minor_breaks = NULL) +
   scale_color_manual(values = c("darkred", "lightcoral")) +
