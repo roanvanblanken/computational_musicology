@@ -68,7 +68,7 @@ Feature analysis {.storyboard}
 
 ```{r}
 # Create a scatterplot
-old <- songs_i_like %>%
+songs_i_like %>%
   ggplot(aes(x = valence, y = energy, size = loudness, color = mode)) +
   geom_point(alpha = 0.5) +
   scale_x_continuous(limits = c(0, 1), breaks = c(0, 0.50, 1), minor_breaks = NULL) +
@@ -81,16 +81,6 @@ old <- songs_i_like %>%
        subtitle = "Plotting valence, energy, and loudness",
        caption = "Data source: Spotify API\nAuthor: Roan van Blanken")
 
-# create scatter plot with size and color options
-p <- plot_ly(songs_i_like, x = ~valence, y = ~energy, 
-             color = ~mode, colors = c("blue", "red"),
-             size = ~loudness, sizes = c(10, 100)) %>%
-  layout(title = "Valence vs. Energy", 
-         xaxis = list(title = "Valence"), 
-         yaxis = list(title = "Energy"))
-
-# show plot
-p
 ```
 
 ---
@@ -237,7 +227,7 @@ metal <-
   unnest(segments) |>
   select(start, duration, pitches)
 
-metal |>
+chromogram1 <- metal |>
   mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
   compmus_gather_chroma() |> 
   ggplot(
@@ -252,18 +242,36 @@ metal |>
   labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
   theme_minimal() +
   scale_fill_viridis_c()
+
+ggplotly(chromogram1, tooltip = "none", source = "none") %>%
+  layout(
+    annotations = list(
+      list(
+        x = 1, y = -0.18,
+        text = "Data source: Spotify API\nAuthor: Roan van Blanken",
+        showarrow = FALSE,
+        xref = "paper",
+        yref = "paper",
+        font = list(size = 10),
+        align = "right",
+        xanchor = "right",
+        yanchor = "bottom",
+        pad = list(t = 0, r = 0, b = 10)
+      )
+    )
+  )
 ```
 
 ### Shut Up and Dance
 
-```{r}
-dance <-
+```{r chromagram 2}
+dancewm <-
   get_tidy_audio_analysis("0kzw2tRyuL9rzipi5ntlIy") |>
   select(segments) |>
   unnest(segments) |>
   select(start, duration, pitches)
 
-dance |>
+chromogram2 <- dancewm |>
   mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
   compmus_gather_chroma() |> 
   ggplot(
@@ -277,16 +285,262 @@ dance |>
   geom_tile() +
   labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
   theme_minimal() +
-  scale_fill_viridis_c() +
-  theme(
-    plot.background = element_rect(fill = "#f5f5f5", color = NA),
-    panel.grid = element_blank(),
-    axis.line = element_line(color = "black"),
-    axis.text = element_text(color = "black"),
-    legend.position = "bottom"
+  scale_fill_viridis_c()
+
+ggplotly(chromogram2, tooltip = "none", source = "none") %>%
+  layout(
+    annotations = list(
+      list(
+        x = 1, y = -0.18,
+        text = "Data source: Spotify API\nAuthor: Roan van Blanken",
+        showarrow = FALSE,
+        xref = "paper",
+        yref = "paper",
+        font = list(size = 10),
+        align = "right",
+        xanchor = "right",
+        yanchor = "bottom",
+        pad = list(t = 0, r = 0, b = 10)
+      )
+    )
+  )
+```
+
+Ceptrogram
+=====================================
+
+Overview
+--------------------------------------------------
+
+### Chart A
+
+A ceptrogram is a visual representation of the distribution of timbral characteristics in a musical recording. Comparing the ceptrograms of two songs, "State of Unrest" from the playlist of disliked songs and "Shut up and Dance" from the playlist of liked songs, reveals interesting differences in their timbral distribution. In "State of Unrest," there is a strong concentration of timbral characteristics around a certain range, indicating a relatively stable sonic texture. On the other hand, "Shut up and Dance" shows more variation in timbral distribution, with a wider range of timbral characteristics. This suggests that "Shut up and Dance" has a more complex and varied sound texture. These differences in timbral distribution could contribute to the overall appeal of the songs and could be further explored in future analyses.
+
+Column 2
+--------------------------------------------------
+
+### State of Unrest
+
+```{r ceptrogram 1}
+metal <-
+  get_tidy_audio_analysis("3u4djE2yAEkKMWJEUOOJyT") |> # Change URI.
+  compmus_align(bars, segments) |>                     # Change `bars`
+  select(bars) |>                                      #   in all three
+  unnest(bars) |>                                      #   of these lines.
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  ) |>
+  mutate(
+    timbre =
+      map(segments,
+        compmus_summarise, timbre,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  )
+
+ceptrogram1 <- metal |>
+  compmus_gather_timbre() |>
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = basis,
+      fill = value
+    )
   ) +
-  ggtitle("Chromagram of 'Shut Up and Dance'") +
-  theme(plot.title = element_text(hjust = 0.5))
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  scale_fill_viridis_c() +                              
+  theme_classic()
+
+ggplotly(ceptrogram1, tooltip = "none", source = "none") %>%
+  layout(
+    annotations = list(
+      list(
+        x = 1, y = -0.17,
+        text = "Data source: Spotify API\nAuthor: Roan van Blanken",
+        showarrow = FALSE,
+        xref = "paper",
+        yref = "paper",
+        font = list(size = 10),
+        align = "right",
+        xanchor = "right",
+        yanchor = "bottom",
+        pad = list(t = 0, r = 0, b = 10)
+      )
+    )
+  )
+```
+
+
+
+
+### Shut Up and Dance
+
+```{r ceptrogram 2}
+dancewm <-
+  get_tidy_audio_analysis("0kzw2tRyuL9rzipi5ntlIy") |> # Change URI.
+  compmus_align(bars, segments) |>                     # Change `bars`
+  select(bars) |>                                      #   in all three
+  unnest(bars) |>                                      #   of these lines.
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  ) |>
+  mutate(
+    timbre =
+      map(segments,
+        compmus_summarise, timbre,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  )
+
+ceptrogram2 <- dancewm |>
+  compmus_gather_timbre() |>
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = basis,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  scale_fill_viridis_c() +                              
+  theme_classic()
+
+ggplotly(ceptrogram2, tooltip = "none", source = "none") %>%
+  layout(
+    annotations = list(
+      list(
+        x = 1, y = -0.17,
+        text = "Data source: Spotify API\nAuthor: Roan van Blanken",
+        showarrow = FALSE,
+        xref = "paper",
+        yref = "paper",
+        font = list(size = 10),
+        align = "right",
+        xanchor = "right",
+        yanchor = "bottom",
+        pad = list(t = 0, r = 0, b = 10)
+      )
+    )
+  )
+```
+
+Self-similarity Matrices
+=====================================
+
+Overview {data-width=500}
+--------------------------------------------------
+
+### Overview
+
+A self-similarity matrix is a visual representation of the similarity between different sections of a musical recording. Comparing the self-similarity matrices of four songs, "State of Unrest" in both timbre and chroma and "Shut up and Dance" in both timbre and chroma, reveals interesting differences in their internal structure.
+
+In the self-similarity matrix for the timbral characteristics of "State of Unrest," there are clearly defined blocks, indicating repeated patterns in the sound. In contrast, the timbral self-similarity matrix for "Shut up and Dance" shows a more continuous, fluid structure, suggesting a more unpredictable and dynamic sound.
+
+Similarly, the chroma self-similarity matrix for "State of Unrest" shows a highly repetitive structure with clear diagonal lines, indicating the presence of repeated chord progressions. On the other hand, the chroma self-similarity matrix for "Shut up and Dance" shows a more dispersed and varied pattern, indicating a more diverse harmonic structure.
+
+These differences in internal structure could contribute to the overall appeal of the songs and provide insights into the musical composition and arrangement. Further analyses could explore the relationship between these structural characteristics and the emotional and perceptual responses to the music.
+
+column2 {data-width=250}
+--------------------------------------------------
+
+### State of Unrest - Self-similarity Matrix (Chroma)
+
+```{r compmus_self_similarity1}
+metal |>
+  compmus_self_similarity(pitches, "cosine") |> 
+  ggplot(
+    aes(
+      x = xstart + xduration / 2,
+      width = xduration,
+      y = ystart + yduration / 2,
+      height = yduration,
+      fill = d
+    )
+  ) +
+  geom_tile() +
+  coord_fixed() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_classic() +
+  labs(x = "", y = "")
+```
+
+
+### State of Unrest - Self-similarity Matrix (Timbre)
+
+```{r compmus_self_similarity2}
+metal |>
+  compmus_self_similarity(timbre, "cosine") |> 
+  ggplot(
+    aes(
+      x = xstart + xduration / 2,
+      width = xduration,
+      y = ystart + yduration / 2,
+      height = yduration,
+      fill = d
+    )
+  ) +
+  geom_tile() +
+  coord_fixed() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_classic() +
+  labs(x = "", y = "")
+```
+
+column3 {data-width=250}
+--------------------------------------------------
+
+### Shut Up and Dance - Self-similarity Matrix (Chroma)
+
+```{r compmus_self_similarity3}
+dancewm |>
+  compmus_self_similarity(pitches, "cosine") |> 
+  ggplot(
+    aes(
+      x = xstart + xduration / 2,
+      width = xduration,
+      y = ystart + yduration / 2,
+      height = yduration,
+      fill = d
+    )
+  ) +
+  geom_tile() +
+  coord_fixed() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_classic() +
+  labs(x = "", y = "")
+```
+
+### Shut Up and Dance - Self-similarity Matrix (Timbre)
+
+```{r compmus_self_similarity4}
+dancewm |>
+  compmus_self_similarity(timbre, "cosine") |> 
+  ggplot(
+    aes(
+      x = xstart + xduration / 2,
+      width = xduration,
+      y = ystart + yduration / 2,
+      height = yduration,
+      fill = d
+    )
+  ) +
+  geom_tile() +
+  coord_fixed() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_classic() +
+  labs(x = "", y = "")
 ```
 
 Conclusion
