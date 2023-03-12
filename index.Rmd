@@ -1,5 +1,5 @@
 ---
-title: "Computational Musicology - Final Portfolio"
+title: "Computational Musicology"
 author: "Roan van Blanken"
 output: 
   flexdashboard::flex_dashboard:
@@ -30,7 +30,7 @@ songs_i_dislike <- songs_i_dislike %>%
 
 ```
 
-Understanding Spotifys recommendation
+Understanding Spotify's recommendations {data-icon="fa-spotify"}
 =====================================
 
 Column {data-width=500}
@@ -204,6 +204,36 @@ plot_ly() %>%
 ---
 
 Songs I like seems to be **louder** than song I dislike.
+
+Track-Level Summary
+=====================================
+
+Overview
+--------------------------------------------------
+
+### Chart A
+
+The selection of an appropriate corpus is essential to effectively achieve research objectives. In this study, a broad corpus was chosen that included diverse data related to the research question. However, the large volume of data made it difficult to identify significant patterns or trends that could adequately address the research question.
+
+To overcome this challenge, the decision was made to focus on the outliers in the corpus. Specifically, the analysis focused on the extreme cases that were most divergent from the norm in terms of a specific timbre component. This approach allowed for the isolation and study of the outliers, leading to valuable insights and a better understanding of the factors contributing to their unique timbre characteristics. Ultimately, this approach strengthened the analysis and enhanced the quality of the research findings.
+
+Timbre, the quality of sound that distinguishes different musical instruments, is a crucial aspect of music. The analysis of timbre is often performed using spectral content, which measures the relative strengths of various frequency components that make up the sound. In this study, the focus was on a specific timbre component, which was used to isolate and study the outliers in the corpus.
+
+Column 2
+--------------------------------------------------
+
+### Summary 1
+
+```{r summary_1, echo=FALSE, message=FALSE, fig.cap="Track Summary 1", out.width='80%'}
+knitr::include_graphics("summary_1.png")
+```
+
+### Summary 2
+
+```{r summary_2, echo=FALSE, message=FALSE, fig.cap="Track Summary 1", out.width='80%'}
+knitr::include_graphics("summary_2.png")
+```
+
 
 Chromagram
 =====================================
