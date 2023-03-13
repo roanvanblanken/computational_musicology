@@ -23,9 +23,7 @@ corpus <-
   mutate(Playlist = "Songs I like") |>
   bind_rows(sid |> mutate(Playlist = "Songs I dislike"))
 
-write.csv(corpus, "track_summary_data.csv", row.names=FALSE)
-
-corpus |>
+corpus2 <- corpus |>
   mutate(
     sections =
       map(
@@ -35,15 +33,19 @@ corpus |>
         list(section_mean = mean, section_sd = sd)   # aggregation functions
       )
   ) |>
-  unnest(sections) |>
+  unnest(sections)
+
+saveRDS(corpus2, file="corpus.Rda")
+
+corpus2 |>
   ggplot(
-    aes(
-      x = tempo,
-      y = tempo_section_sd,
-      colour = Playlist,
-      alpha = loudness
-    )
-  ) +
+  aes(
+    x = tempo,
+    y = tempo_section_sd,
+    colour = Playlist,
+    alpha = loudness
+  )
+) +
   geom_point(aes(size = duration / 60)) +
   geom_rug() +
   theme_minimal() +
@@ -55,6 +57,7 @@ corpus |>
     size = "Duration (min)",
     alpha = "Volume (dBFS)"
   )
+
 
 corpus |>
   mutate(
@@ -96,4 +99,4 @@ cdata %>%
   geom_text(data = . %>% filter(Playlist == "Songs I dislike" & basis == 'c02') %>% filter(value == max(value)), aes(label = track.name), hjust = 0, vjust = 0.5, color = "darkviolet", size = 4, fontface = "bold") +
   labs(x = "Spotify Timbre Coefficients", y = "", fill = "Playlist")
 
-write.csv(cdata, "timbre_data.csv", row.names=FALSE)
+saveRDS(cdata, file="timbre_data.Rda")

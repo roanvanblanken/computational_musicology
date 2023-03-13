@@ -211,7 +211,7 @@ Track-Level Summary
 Overview
 --------------------------------------------------
 
-### Chart A
+### Outliers
 
 The selection of an appropriate corpus is essential to effectively achieve research objectives. In this study, a broad corpus was chosen that included diverse data related to the research question. However, the large volume of data made it difficult to identify significant patterns or trends that could adequately address the research question.
 
@@ -219,19 +219,55 @@ To overcome this challenge, the decision was made to focus on the outliers in th
 
 Timbre, the quality of sound that distinguishes different musical instruments, is a crucial aspect of music. The analysis of timbre is often performed using spectral content, which measures the relative strengths of various frequency components that make up the sound. In this study, the focus was on a specific timbre component, which was used to isolate and study the outliers in the corpus.
 
+By examining the plot, it can be observed that there are four outliers, with two in each playlist. Specifically, in the **'Songs I like'** playlist, the song 'Jungle' exhibits the highest timbre in the c02 vector, whereas 'Engravings' has the lowest. In contrast, in the **'Songs I dislike'** playlist, 'Murder' has the highest timbre in the c02 vector, while '19 Tini 5' has the lowest.
+
 Column 2
 --------------------------------------------------
 
 ### Summary 1
 
-```{r summary_1, echo=FALSE, message=FALSE, fig.cap="Track Summary 1", out.width='80%'}
-knitr::include_graphics("summary_1.png")
+```{r summary_1}
+corpus2 <- readRDS(file="corpus.Rda")
+
+corpus2 |>
+  ggplot(
+  aes(
+    x = tempo,
+    y = tempo_section_sd,
+    colour = Playlist,
+    alpha = loudness
+  )
+) +
+  geom_point(aes(size = duration / 60)) +
+  geom_rug() +
+  theme_minimal() +
+  ylim(0, 5) +
+  labs(
+    x = "Mean Tempo (bpm)",
+    y = "SD Tempo",
+    colour = "Playlist",
+    size = "Duration (min)",
+    alpha = "Volume (dBFS)"
+  )
 ```
 
 ### Summary 2
 
-```{r summary_2, echo=FALSE, message=FALSE, fig.cap="Track Summary 1", out.width='80%'}
-knitr::include_graphics("summary_2.png")
+```{r summary_2}
+cdata <- readRDS(file="timbre_data.Rda")
+
+plot1 <- cdata %>%
+  ggplot(aes(x = factor(basis), y = value, fill = Playlist)) +
+  geom_violin() +
+  scale_fill_viridis_d() +
+  geom_text(data = . %>% filter(Playlist == "Songs I like" & basis == 'c02') %>% filter(value == min(value)), aes(label = track.name), position = position_nudge(x = 1.3, y = -0.3), color = "darkgoldenrod", size = 4, fontface = "bold") +
+  geom_text(data = . %>% filter(Playlist == "Songs I like" & basis == 'c02') %>% filter(value == max(value)), aes(label = track.name), position = position_nudge(x = 1.2, y = 0), color = "darkgoldenrod", size = 4, fontface = "bold") +
+  geom_text(data = . %>% filter(Playlist == "Songs I dislike" & basis == 'c02') %>% filter(value == min(value)), aes(label = track.name), position = position_nudge(x = 0.6, y = 0.3), color = "darkviolet", size = 4, fontface = "bold") +
+  geom_text(data = . %>% filter(Playlist == "Songs I dislike" & basis == 'c02') %>% filter(value == max(value)), aes(label = track.name), position = position_nudge(x = 2.8, y = 0.3), color = "darkviolet", size = 4, fontface = "bold") +
+  labs(x = "Spotify Timbre Coefficients", y = "", fill = "Playlist") +
+  theme_minimal()
+
+ggplotly(plot1)
 ```
 
 

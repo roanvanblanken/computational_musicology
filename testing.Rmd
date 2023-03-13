@@ -1,0 +1,130 @@
+---
+title: "Themed dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    theme:
+      bg: "#101010"
+      fg: "#FDF7F7" 
+      primary: "#ED79F9"
+      base_font:
+        google: Prompt
+      code_font:
+        google: JetBrains Mono
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+# Install thematic and un-comment for themed static plots (i.e., ggplot2)
+# thematic::thematic_rmd()
+library(flexdashboard)
+library(spotifyr)
+library(purrr)
+library(dplyr)
+library(ggplot2)
+library(plotly)
+library(tidyverse)
+library(compmus)
+
+# Get playlists
+songs_i_like <- get_playlist_audio_features("", "6pl0C7qbIl5uoY3Tdf82oa")
+
+songs_i_like <- songs_i_like %>%
+  mutate(mode = ifelse(mode == 0, "Minor", "Major"))
+
+songs_i_dislike <- get_playlist_audio_features("", "4bJQX5w7W4wEnHLmWqUIVY")
+
+songs_i_dislike <- songs_i_dislike %>%
+  mutate(mode = ifelse(mode == 0, "Minor", "Major"))
+```
+
+Column {data-width=650 .tabset}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+cdata <- readRDS(file="timbre_data.Rda")
+
+plot1 <- cdata %>%
+  ggplot(aes(x = factor(basis), y = value, fill = Playlist)) +
+  geom_violin() +
+  scale_fill_viridis_d() +
+  geom_text(data = . %>% filter(Playlist == "Songs I like" & basis == 'c02') %>% filter(value == min(value)), aes(label = track.name), position = position_nudge(x = 1.3, y = -0.3), color = "darkgoldenrod", size = 4, fontface = "bold") +
+  geom_text(data = . %>% filter(Playlist == "Songs I like" & basis == 'c02') %>% filter(value == max(value)), aes(label = track.name), position = position_nudge(x = 1.2, y = 0), color = "darkgoldenrod", size = 4, fontface = "bold") +
+  geom_text(data = . %>% filter(Playlist == "Songs I dislike" & basis == 'c02') %>% filter(value == min(value)), aes(label = track.name), position = position_nudge(x = 0.6, y = 0.3), color = "darkviolet", size = 4, fontface = "bold") +
+  geom_text(data = . %>% filter(Playlist == "Songs I dislike" & basis == 'c02') %>% filter(value == max(value)), aes(label = track.name), position = position_nudge(x = 2.8, y = 0.3), color = "darkviolet", size = 4, fontface = "bold") +
+  labs(x = "Spotify Timbre Coefficients", y = "", fill = "Playlist") +
+  theme_minimal()
+
+ggplotly(plot1)
+```
+
+### Chart B
+
+```{r}
+corpus2 <- readRDS(file="corpus.Rda")
+
+
+corpus2 %>%
+  plot_ly(
+    x = ~tempo,
+    y = ~tempo_section_sd,
+    color = ~Playlist,
+    colors = "Set1",
+    size = ~duration / 60,
+    text = ~paste("Playlist: ", Playlist,
+                  "<br>Duration (min): ", duration / 60,
+                  "<br>Tempo: ", tempo,
+                  "<br>SD Tempo: ", tempo_section_sd,
+                  "<br>Volume (dBFS): ", loudness)
+  ) %>%
+  add_markers(
+    opacity = ~loudness/max(corpus2$loudness)
+  ) %>%
+  add_trace(
+    x = ~tempo,
+    y = ~tempo_section_sd,
+    type = "histogram2d",
+    colorscale = "Greys",
+    showscale = FALSE
+  ) %>%
+  layout(
+    xaxis = list(title = "Mean Tempo (bpm)"),
+    yaxis = list(title = "SD Tempo"),
+    legend = list(title = "Playlist"),
+    title = "Tempo vs. SD Tempo by Playlist",
+    hovermode = "closest",
+    margin = list(l = 50, r = 50, b = 50, t = 50, pad = 4),
+    shapes = list(
+      type = "line",
+      x0 = min(corpus2$tempo),
+      y0 = 1.5,
+      x1 = max(corpus2$tempo),
+      y1 = 1.5,
+      line = list(
+        color = "red",
+        width = 2,
+        dash = "dashdot"
+      )
+    )
+  )
+
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart C
+
+```{r}
+
+```
+
+### Chart D
+
+```{r}
+
+```
+
