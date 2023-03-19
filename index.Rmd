@@ -1,8 +1,13 @@
 ---
-title: "Computational Musicology"
+title: "Computational Musicology - Final Portfolio"
 author: "Roan van Blanken"
 output: 
   flexdashboard::flex_dashboard:
+    theme:
+      base_font:
+        google: Prompt
+      code_font:
+        google: JetBrains Mono
     orientation: columns
     self_contained: false
 ---
@@ -30,7 +35,96 @@ songs_i_dislike <- songs_i_dislike %>%
 
 ```
 
-Understanding Spotify's recommendations {data-icon="fa-spotify"}
+```{r chords and keys setup, include=FALSE}
+circshift <- function(v, n) {
+  if (n == 0) v else c(tail(v, n), head(v, -n))
+}
+
+#      C     C#    D     Eb    E     F     F#    G     Ab    A     Bb    B
+major_chord <-
+  c(   1,    0,    0,    0,    1,    0,    0,    1,    0,    0,    0,    0)
+minor_chord <-
+  c(   1,    0,    0,    1,    0,    0,    0,    1,    0,    0,    0,    0)
+seventh_chord <-
+  c(   1,    0,    0,    0,    1,    0,    0,    1,    0,    0,    1,    0)
+
+major_key <-
+  c(6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88)
+minor_key <-
+  c(6.33, 2.68, 3.52, 5.38, 2.60, 3.53, 2.54, 4.75, 3.98, 2.69, 3.34, 3.17)
+
+chord_templates <-
+  tribble(
+    ~name, ~template,
+    "Gb:7", circshift(seventh_chord, 6),
+    "Gb:maj", circshift(major_chord, 6),
+    "Bb:min", circshift(minor_chord, 10),
+    "Db:maj", circshift(major_chord, 1),
+    "F:min", circshift(minor_chord, 5),
+    "Ab:7", circshift(seventh_chord, 8),
+    "Ab:maj", circshift(major_chord, 8),
+    "C:min", circshift(minor_chord, 0),
+    "Eb:7", circshift(seventh_chord, 3),
+    "Eb:maj", circshift(major_chord, 3),
+    "G:min", circshift(minor_chord, 7),
+    "Bb:7", circshift(seventh_chord, 10),
+    "Bb:maj", circshift(major_chord, 10),
+    "D:min", circshift(minor_chord, 2),
+    "F:7", circshift(seventh_chord, 5),
+    "F:maj", circshift(major_chord, 5),
+    "A:min", circshift(minor_chord, 9),
+    "C:7", circshift(seventh_chord, 0),
+    "C:maj", circshift(major_chord, 0),
+    "E:min", circshift(minor_chord, 4),
+    "G:7", circshift(seventh_chord, 7),
+    "G:maj", circshift(major_chord, 7),
+    "B:min", circshift(minor_chord, 11),
+    "D:7", circshift(seventh_chord, 2),
+    "D:maj", circshift(major_chord, 2),
+    "F#:min", circshift(minor_chord, 6),
+    "A:7", circshift(seventh_chord, 9),
+    "A:maj", circshift(major_chord, 9),
+    "C#:min", circshift(minor_chord, 1),
+    "E:7", circshift(seventh_chord, 4),
+    "E:maj", circshift(major_chord, 4),
+    "G#:min", circshift(minor_chord, 8),
+    "B:7", circshift(seventh_chord, 11),
+    "B:maj", circshift(major_chord, 11),
+    "D#:min", circshift(minor_chord, 3)
+  )
+
+key_templates <-
+  tribble(
+    ~name, ~template,
+    "Gb:maj", circshift(major_key, 6),
+    "Bb:min", circshift(minor_key, 10),
+    "Db:maj", circshift(major_key, 1),
+    "F:min", circshift(minor_key, 5),
+    "Ab:maj", circshift(major_key, 8),
+    "C:min", circshift(minor_key, 0),
+    "Eb:maj", circshift(major_key, 3),
+    "G:min", circshift(minor_key, 7),
+    "Bb:maj", circshift(major_key, 10),
+    "D:min", circshift(minor_key, 2),
+    "F:maj", circshift(major_key, 5),
+    "A:min", circshift(minor_key, 9),
+    "C:maj", circshift(major_key, 0),
+    "E:min", circshift(minor_key, 4),
+    "G:maj", circshift(major_key, 7),
+    "B:min", circshift(minor_key, 11),
+    "D:maj", circshift(major_key, 2),
+    "F#:min", circshift(minor_key, 6),
+    "A:maj", circshift(major_key, 9),
+    "C#:min", circshift(minor_key, 1),
+    "E:maj", circshift(major_key, 4),
+    "G#:min", circshift(minor_key, 8),
+    "B:maj", circshift(major_key, 11),
+    "D#:min", circshift(minor_key, 3)
+  )
+
+```
+
+Introduction {data-icon="fa-spotify"}
 =====================================
 
 Column {data-width=500}
@@ -51,7 +145,7 @@ Column {data-width=250}
 
 ### Corpus: Songs I like
 
-<iframe src="https://open.spotify.com/embed/playlist/6pl0C7qbIl5uoY3Tdf82oa?utm_source=generator" width="100%" height="100%" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+iframe src="https://open.spotify.com/embed/playlist/6pl0C7qbIl5uoY3Tdf82oa?utm_source=generator" width="100%" height="100%" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
 
 
 Column {data-width=250}
@@ -59,9 +153,9 @@ Column {data-width=250}
 
 ### Corpus: Songs I dislike
 
-<iframe src="https://open.spotify.com/embed/playlist/4bJQX5w7W4wEnHLmWqUIVY?utm_source=generator&theme=0" width="100%" height="100%" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+iframe src="https://open.spotify.com/embed/playlist/4bJQX5w7W4wEnHLmWqUIVY?utm_source=generator&theme=0" width="100%" height="100%" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
 
-Feature analysis {.storyboard}
+Feature analysis {.storyboard data-icon="fa-magnifying-glass"}
 =====================================
 
 ### Relationship between Valence, Energy, Loudness, and Mode for the songs I like 
@@ -205,7 +299,7 @@ plot_ly() %>%
 
 Songs I like seems to be **louder** than song I dislike.
 
-Track-Level Summary
+Track-Level Summary {data-icon="fa-chart-bar"}
 =====================================
 
 Overview
@@ -219,39 +313,12 @@ To overcome this challenge, the decision was made to focus on the outliers in th
 
 Timbre, the quality of sound that distinguishes different musical instruments, is a crucial aspect of music. The analysis of timbre is often performed using spectral content, which measures the relative strengths of various frequency components that make up the sound. In this study, the focus was on a specific timbre component, which was used to isolate and study the outliers in the corpus.
 
-By examining the plot, it can be observed that there are four outliers, with two in each playlist. Specifically, in the **'Songs I like'** playlist, the song 'Jungle' exhibits the highest timbre in the c02 vector, whereas 'Engravings' has the lowest. In contrast, in the **'Songs I dislike'** playlist, 'Murder' has the highest timbre in the c02 vector, while '19 Tini 5' has the lowest.
+By examining the c2 tab, it can be observed that there are four outliers, with two in each playlist. Specifically, in the **'Songs I like'** playlist, the song 'What I like About You' exhibits the highest timbre in the c02 vector, whereas 'The Sailor's Warning' has the lowest. In contrast, in the **'Songs I dislike'** playlist, 'Murder' has the highest timbre in the c02 vector, while '19 Tini 5' has the lowest.
 
-Column 2
+Column 2 {.tabset}
 --------------------------------------------------
 
-### Summary 1
-
-```{r summary_1}
-corpus2 <- readRDS(file="corpus.Rda")
-
-corpus2 |>
-  ggplot(
-  aes(
-    x = tempo,
-    y = tempo_section_sd,
-    colour = Playlist,
-    alpha = loudness
-  )
-) +
-  geom_point(aes(size = duration / 60)) +
-  geom_rug() +
-  theme_minimal() +
-  ylim(0, 5) +
-  labs(
-    x = "Mean Tempo (bpm)",
-    y = "SD Tempo",
-    colour = "Playlist",
-    size = "Duration (min)",
-    alpha = "Volume (dBFS)"
-  )
-```
-
-### Summary 2
+### Timbre components
 
 ```{r summary_2}
 cdata <- readRDS(file="timbre_data.Rda")
@@ -260,18 +327,95 @@ plot1 <- cdata %>%
   ggplot(aes(x = factor(basis), y = value, fill = Playlist)) +
   geom_violin() +
   scale_fill_viridis_d() +
-  geom_text(data = . %>% filter(Playlist == "Songs I like" & basis == 'c02') %>% filter(value == min(value)), aes(label = track.name), position = position_nudge(x = 1.3, y = -0.3), color = "darkgoldenrod", size = 4, fontface = "bold") +
-  geom_text(data = . %>% filter(Playlist == "Songs I like" & basis == 'c02') %>% filter(value == max(value)), aes(label = track.name), position = position_nudge(x = 1.2, y = 0), color = "darkgoldenrod", size = 4, fontface = "bold") +
-  geom_text(data = . %>% filter(Playlist == "Songs I dislike" & basis == 'c02') %>% filter(value == min(value)), aes(label = track.name), position = position_nudge(x = 0.6, y = 0.3), color = "darkviolet", size = 4, fontface = "bold") +
-  geom_text(data = . %>% filter(Playlist == "Songs I dislike" & basis == 'c02') %>% filter(value == max(value)), aes(label = track.name), position = position_nudge(x = 2.8, y = 0.3), color = "darkviolet", size = 4, fontface = "bold") +
   labs(x = "Spotify Timbre Coefficients", y = "", fill = "Playlist") +
   theme_minimal()
 
 ggplotly(plot1)
 ```
 
+### c01
 
-Chromagram
+```{r c01}
+# Create table for c01
+cdata <- readRDS(file="timbre_data.Rda")
+
+table_c01 <- cdata %>%
+  filter(basis == "c01") %>%
+  group_by(Playlist) %>%
+  slice_min(value, n = 1) %>%
+  bind_rows(cdata %>%
+              filter(basis == "c01") %>%
+              group_by(Playlist) %>%
+              slice_max(value, n = 1)) %>%
+  select(Playlist, track.name, artists, value) %>%
+  rename("Track" = "track.name", "Artists" = "artists")
+
+knitr::kable(table_c01, caption = "Table of maximum and minimum values of c01 for each playlist")
+
+```
+
+### c02
+
+```{r c02}
+# Create table for c02
+cdata <- readRDS(file="timbre_data.Rda")
+
+table_c02 <- cdata %>%
+  filter(basis == "c02") %>%
+  group_by(Playlist) %>%
+  slice_min(value, n = 1) %>%
+  bind_rows(cdata %>%
+              filter(basis == "c02") %>%
+              group_by(Playlist) %>%
+              slice_max(value, n = 1)) %>%
+  select(Playlist, track.name, artists, value) %>%
+  rename("Track" = "track.name", "Artists" = "artists")
+
+knitr::kable(table_c02, caption = "Table of maximum and minimum values of c02 for each playlist")
+```
+
+### c03
+
+```{r c03}
+# Create table for c03
+cdata <- readRDS(file="timbre_data.Rda")
+
+table_c03 <- cdata %>%
+  filter(basis == "c03") %>%
+  group_by(Playlist) %>%
+  slice_min(value, n = 1) %>%
+  bind_rows(cdata %>%
+              filter(basis == "c03") %>%
+              group_by(Playlist) %>%
+              slice_max(value, n = 1)) %>%
+  select(Playlist, track.name, artists, value) %>%
+  rename("Track" = "track.name", "Artists" = "artists")
+
+knitr::kable(table_c03, caption = "Table of maximum and minimum values of c03 for each playlist")
+```
+
+### c04
+
+```{r c04}
+# Create table for c04
+cdata <- readRDS(file="timbre_data.Rda")
+
+table_c04 <- cdata %>%
+  filter(basis == "c04") %>%
+  group_by(Playlist) %>%
+  slice_min(value, n = 1) %>%
+  bind_rows(cdata %>%
+              filter(basis == "c04") %>%
+              group_by(Playlist) %>%
+              slice_max(value, n = 1)) %>%
+  select(Playlist, track.name, artists, value) %>%
+  rename("Track" = "track.name", "Artists" = "artists")
+
+knitr::kable(table_c04, caption = "Table of maximum and minimum values of c04 for each playlist")
+```
+
+
+Chromagrams {data-icon="fa-music"}
 =====================================
 
 Overview
@@ -372,7 +516,7 @@ ggplotly(chromogram2, tooltip = "none", source = "none") %>%
   )
 ```
 
-Ceptrogram
+Ceptrograms {data-icon="fa-headphones-alt"}
 =====================================
 
 Overview
@@ -607,6 +751,114 @@ dancewm |>
   scale_fill_viridis_c(guide = "none") +
   theme_classic() +
   labs(x = "", y = "")
+```
+
+Chordograms (W.I.P)
+=====================================
+
+Overview
+--------------------------------------------------
+
+### Chart A
+
+WIP
+
+Column 2
+--------------------------------------------------
+
+### 
+
+```{r chordogram_1}
+
+```
+
+### 
+
+```{r chordogram_2}
+
+```
+
+Tempograms {data-icon="fas fa-drum"}
+=====================================
+
+Overview
+--------------------------------------------------
+
+### Chart A
+
+For the Tempograms, I selected the two songs from the 'Songs I like' playlist with the highest and lowest c01 components based on the track-level-summary (see [track-level-summary](index.html#track-level-summary)). Specifically, I chose 'Africa' by Toto with the highest c01 value, and 'Starstruck' by Years & Years with the lowest c01 value. This selection was made to investigate potential differences in tempo between the songs.
+
+From the plots, it can be observed that both songs have a relatively steady tempo with occasional variations. However, 'Starstruck' exhibits more frequent tempo changes, which can be explained by its lower c01 timbre component. The c01 component measures the overall loudness of the song.
+
+In conclusion, the selection of songs based on their c01 component values allowed for an exploration of potential differences in tempo patterns and provided insights into the relationship between c01 values and overall loudness. Additionally, it is worth noting that I tend to prefer songs with a consistent tempo, which may explain my personal preference for songs with similar overall tempos.
+
+Column 2
+--------------------------------------------------
+
+### 
+
+```{r tempogram_1}
+# Define a custom color palette
+blues_purples <- colorRampPalette(c("#2c7bb6", "#abdda4", "#ffffbf", "#fdae61", "#d7191c"))(100)
+
+
+starstruck_cyclic <- readRDS(file="starstruck_cyclic (Tempogram).Rda")
+
+tempogram_1 <- starstruck_cyclic |>
+  ggplot(aes(x = time, y = bpm, fill = power)) +
+  geom_raster() +
+  ggtitle("Cyclic Tempogram - Years & Years: 'Starstruck'") +
+  scale_fill_gradientn(colors = blues_purples) +
+  labs(x = "Time (s)", y = "Tempo (BPM)") +
+  theme_minimal() +
+  scale_color_gradientn(colors = blues_purples)
+
+ggplotly(tempogram_1, tooltip = "none", source = "none")
+```
+
+### 
+
+```{r tempogram_2}
+# Define a custom color palette
+blues_purples <- colorRampPalette(c("#2c7bb6", "#abdda4", "#ffffbf", "#fdae61", "#d7191c"))(100)
+
+africa_cyclic <- readRDS(file="africa_cyclic (Tempogram).Rda")
+
+tempogram_2 <- africa_cyclic |>
+  ggplot(aes(x = time, y = bpm, fill = power)) +
+  geom_raster() +
+  ggtitle("Cyclic Tempogram - Africa: 'Toto'") +
+  scale_fill_gradientn(colors = blues_purples) +
+  labs(x = "Time (s)", y = "Tempo (BPM)") +
+  theme_minimal() +
+  scale_color_gradientn(colors = blues_purples)
+
+ggplotly(tempogram_2, tooltip = "none", source = "none")
+```
+
+Trained Model (W.I.P)
+=====================================
+
+Overview
+--------------------------------------------------
+
+### Chart A
+
+WIP
+
+Column 2
+--------------------------------------------------
+
+### 
+
+```{r trained_model_1}
+
+```
+
+### 
+
+```{r trained_model_2}
+
 ```
 
 Conclusion

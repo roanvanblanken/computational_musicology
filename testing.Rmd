@@ -3,9 +3,6 @@ title: "Themed dashboard"
 output: 
   flexdashboard::flex_dashboard:
     theme:
-      bg: "#101010"
-      fg: "#FDF7F7" 
-      primary: "#ED79F9"
       base_font:
         google: Prompt
       code_font:
@@ -16,8 +13,6 @@ output:
 
 ```{r setup, include=FALSE}
 library(flexdashboard)
-# Install thematic and un-comment for themed static plots (i.e., ggplot2)
-# thematic::thematic_rmd()
 library(flexdashboard)
 library(spotifyr)
 library(purrr)
@@ -39,12 +34,28 @@ songs_i_dislike <- songs_i_dislike %>%
   mutate(mode = ifelse(mode == 0, "Minor", "Major"))
 ```
 
-Column {data-width=650 .tabset}
------------------------------------------------------------------------
+Track-Level Summary {data-icon="fas fa-music"}
+=====================================
 
-### Chart A
+Overview
+--------------------------------------------------
 
-```{r}
+### Outliers
+
+The selection of an appropriate corpus is essential to effectively achieve research objectives. In this study, a broad corpus was chosen that included diverse data related to the research question. However, the large volume of data made it difficult to identify significant patterns or trends that could adequately address the research question.
+
+To overcome this challenge, the decision was made to focus on the outliers in the corpus. Specifically, the analysis focused on the extreme cases that were most divergent from the norm in terms of a specific timbre component. This approach allowed for the isolation and study of the outliers, leading to valuable insights and a better understanding of the factors contributing to their unique timbre characteristics. Ultimately, this approach strengthened the analysis and enhanced the quality of the research findings.
+
+Timbre, the quality of sound that distinguishes different musical instruments, is a crucial aspect of music. The analysis of timbre is often performed using spectral content, which measures the relative strengths of various frequency components that make up the sound. In this study, the focus was on a specific timbre component, which was used to isolate and study the outliers in the corpus.
+
+By examining the plot, it can be observed that there are four outliers, with two in each playlist. Specifically, in the **'Songs I like'** playlist, the song 'Jungle' exhibits the highest timbre in the c02 vector, whereas 'Engravings' has the lowest. In contrast, in the **'Songs I dislike'** playlist, 'Murder' has the highest timbre in the c02 vector, while '19 Tini 5' has the lowest.
+
+Column 2 {.tabset}
+--------------------------------------------------
+
+### Timbre components
+
+```{r summary_2}
 cdata <- readRDS(file="timbre_data.Rda")
 
 plot1 <- cdata %>%
@@ -61,70 +72,141 @@ plot1 <- cdata %>%
 ggplotly(plot1)
 ```
 
-### Chart B
+### c01
 
-```{r}
-corpus2 <- readRDS(file="corpus.Rda")
+```{r c01}
+# Create table for c01
+cdata <- readRDS(file="timbre_data.Rda")
 
+table_c01 <- cdata %>%
+  filter(basis == "c01") %>%
+  group_by(Playlist) %>%
+  slice_min(value, n = 1) %>%
+  bind_rows(cdata %>%
+              filter(basis == "c01") %>%
+              group_by(Playlist) %>%
+              slice_max(value, n = 1)) %>%
+  select(Playlist, track.name, artists, value) %>%
+  rename("Track" = "track.name", "Artists" = "artists")
 
-corpus2 %>%
-  plot_ly(
-    x = ~tempo,
-    y = ~tempo_section_sd,
-    color = ~Playlist,
-    colors = "Set1",
-    size = ~duration / 60,
-    text = ~paste("Playlist: ", Playlist,
-                  "<br>Duration (min): ", duration / 60,
-                  "<br>Tempo: ", tempo,
-                  "<br>SD Tempo: ", tempo_section_sd,
-                  "<br>Volume (dBFS): ", loudness)
-  ) %>%
-  add_markers(
-    opacity = ~loudness/max(corpus2$loudness)
-  ) %>%
-  add_trace(
-    x = ~tempo,
-    y = ~tempo_section_sd,
-    type = "histogram2d",
-    colorscale = "Greys",
-    showscale = FALSE
-  ) %>%
-  layout(
-    xaxis = list(title = "Mean Tempo (bpm)"),
-    yaxis = list(title = "SD Tempo"),
-    legend = list(title = "Playlist"),
-    title = "Tempo vs. SD Tempo by Playlist",
-    hovermode = "closest",
-    margin = list(l = 50, r = 50, b = 50, t = 50, pad = 4),
-    shapes = list(
-      type = "line",
-      x0 = min(corpus2$tempo),
-      y0 = 1.5,
-      x1 = max(corpus2$tempo),
-      y1 = 1.5,
-      line = list(
-        color = "red",
-        width = 2,
-        dash = "dashdot"
-      )
-    )
-  )
+knitr::kable(table_c01, caption = "Table of maximum and minimum values of c01 for each playlist")
 
 ```
 
-Column {data-width=350}
------------------------------------------------------------------------
+### c02
 
-### Chart C
+```{r c02}
+# Create table for c02
+cdata <- readRDS(file="timbre_data.Rda")
 
-```{r}
+table_c02 <- cdata %>%
+  filter(basis == "c02") %>%
+  group_by(Playlist) %>%
+  slice_min(value, n = 1) %>%
+  bind_rows(cdata %>%
+              filter(basis == "c02") %>%
+              group_by(Playlist) %>%
+              slice_max(value, n = 1)) %>%
+  select(Playlist, track.name, artists, value) %>%
+  rename("Track" = "track.name", "Artists" = "artists")
 
+knitr::kable(table_c02, caption = "Table of maximum and minimum values of c02 for each playlist")
 ```
 
-### Chart D
+### c03
 
-```{r}
+```{r c03}
+# Create table for c03
+cdata <- readRDS(file="timbre_data.Rda")
 
+table_c03 <- cdata %>%
+  filter(basis == "c03") %>%
+  group_by(Playlist) %>%
+  slice_min(value, n = 1) %>%
+  bind_rows(cdata %>%
+              filter(basis == "c03") %>%
+              group_by(Playlist) %>%
+              slice_max(value, n = 1)) %>%
+  select(Playlist, track.name, artists, value) %>%
+  rename("Track" = "track.name", "Artists" = "artists")
+
+knitr::kable(table_c03, caption = "Table of maximum and minimum values of c03 for each playlist")
 ```
 
+### c04
+
+```{r c04}
+# Create table for c04
+cdata <- readRDS(file="timbre_data.Rda")
+
+table_c04 <- cdata %>%
+  filter(basis == "c04") %>%
+  group_by(Playlist) %>%
+  slice_min(value, n = 1) %>%
+  bind_rows(cdata %>%
+              filter(basis == "c04") %>%
+              group_by(Playlist) %>%
+              slice_max(value, n = 1)) %>%
+  select(Playlist, track.name, artists, value) %>%
+  rename("Track" = "track.name", "Artists" = "artists")
+
+knitr::kable(table_c04, caption = "Table of maximum and minimum values of c04 for each playlist")
+```
+
+Tempograms {data-icon="fas fa-drum"}
+=====================================
+
+Overview
+--------------------------------------------------
+
+### Chart A
+
+For the Tempograms, I selected the two songs from the 'Songs I like' playlist with the highest and lowest c01 components based on the track-level-summary (see [track-level-summary](index.html#track-level-summary)). Specifically, I chose 'Africa' by Toto with the highest c01 value, and 'Starstruck' by Years & Years with the lowest c01 value. This selection was made to investigate potential differences in tempo between the songs.
+
+From the plots, it can be observed that both songs have a relatively steady tempo with occasional variations. However, 'Starstruck' exhibits more frequent tempo changes, which can be explained by its lower c01 timbre component. The c01 component measures the overall loudness of the song.
+
+In conclusion, the selection of songs based on their c01 component values allowed for an exploration of potential differences in tempo patterns and provided insights into the relationship between c01 values and overall loudness. Additionally, it is worth noting that I tend to prefer songs with a consistent tempo, which may explain my personal preference for songs with similar overall tempos.
+
+Column 2
+--------------------------------------------------
+
+### 
+
+```{r tempogram_1}
+# Define a custom color palette
+blues_purples <- colorRampPalette(c("#2c7bb6", "#abdda4", "#ffffbf", "#fdae61", "#d7191c"))(100)
+
+
+starstruck_cyclic <- readRDS(file="starstruck_cyclic (Tempogram).Rda")
+
+tempogram_1 <- starstruck_cyclic |>
+  ggplot(aes(x = time, y = bpm, fill = power)) +
+  geom_raster() +
+  ggtitle("Cyclic Tempogram - Years & Years: 'Starstruck'") +
+  scale_fill_gradientn(colors = blues_purples) +
+  labs(x = "Time (s)", y = "Tempo (BPM)") +
+  theme_minimal() +
+  scale_color_gradientn(colors = blues_purples)
+
+ggplotly(tempogram_1, tooltip = "none", source = "none")
+```
+
+### 
+
+```{r tempogram_2}
+# Define a custom color palette
+blues_purples <- colorRampPalette(c("#2c7bb6", "#abdda4", "#ffffbf", "#fdae61", "#d7191c"))(100)
+
+africa_cyclic <- readRDS(file="africa_cyclic (Tempogram).Rda")
+
+tempogram_2 <- africa_cyclic |>
+  ggplot(aes(x = time, y = bpm, fill = power)) +
+  geom_raster() +
+  ggtitle("Cyclic Tempogram - Africa: 'Toto'") +
+  scale_fill_gradientn(colors = blues_purples) +
+  labs(x = "Time (s)", y = "Tempo (BPM)") +
+  theme_minimal() +
+  scale_color_gradientn(colors = blues_purples)
+
+ggplotly(tempogram_2, tooltip = "none", source = "none")
+```

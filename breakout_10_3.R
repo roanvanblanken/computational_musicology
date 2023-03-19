@@ -76,20 +76,32 @@ corpus |>
   scale_fill_viridis_d() +
   labs(x = "Spotify Timbre Coefficients", y = "", fill = "Playlist")
 
+library(tidyr)
+library(dplyr)
+library(stringr)
+
 cdata <- corpus %>%
   mutate(
-    timbre =
-      map(
-        segments,
-        compmus_summarise,
-        timbre,
-        method = "mean"
-      )
+    timbre = map(
+      segments,
+      compmus_summarise,
+      timbre,
+      method = "mean"
+    )
   ) %>%
-  select(Playlist, timbre, track.name) %>%
+  select(Playlist, timbre, track.name, track.artists) %>%
   compmus_gather_timbre()
 
-cdata %>%
+timbre_data <- cdata %>%
+  unnest(track.artists) %>%
+  mutate(track.artists = ifelse(name == "name", NA_character_, name)) %>%
+  group_by(track.name) %>%
+  summarise(artists = str_c(unique(na.omit(track.artists)), collapse = ", ")) %>%
+  right_join(cdata, by = "track.name", multiple = "all") %>%
+  select(-track.artists)
+
+
+timbre_data %>%
   ggplot(aes(x = factor(basis), y = value, fill = Playlist)) +
   geom_violin() +
   scale_fill_viridis_d() +
@@ -99,4 +111,4 @@ cdata %>%
   geom_text(data = . %>% filter(Playlist == "Songs I dislike" & basis == 'c02') %>% filter(value == max(value)), aes(label = track.name), hjust = 0, vjust = 0.5, color = "darkviolet", size = 4, fontface = "bold") +
   labs(x = "Spotify Timbre Coefficients", y = "", fill = "Playlist")
 
-saveRDS(cdata, file="timbre_data.Rda")
+saveRDS(timbre_data, file="timbre_data.Rda")
