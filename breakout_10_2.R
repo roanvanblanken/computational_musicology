@@ -92,8 +92,8 @@ key_templates <-
     "D#:min", circshift(minor_key, 3)
   )
 
-twenty_five <-
-  get_tidy_audio_analysis("3z8h0TU7ReDPLIbEnYhWZb") |>
+murder <-
+  get_tidy_audio_analysis("0wFPKFtBes3NTyTW4bkjrz") |>
   compmus_align(bars, segments) |>
   select(bars) |>
   unnest(bars) |>
@@ -105,13 +105,24 @@ twenty_five <-
       )
   )
 
-twenty_five |> 
+murder_keygram <- murder |> 
   compmus_match_pitch_template(
-    chord_templates,         # Change to chord_templates if descired
+    key_templates,       # Change to chord_templates if desired
     method = "euclidean",  # Try different distance metrics
     norm = "manhattan"     # Try different norms
-  ) |>
-  ggplot(
+  )
+
+murder_chordogram <- murder |> 
+  compmus_match_pitch_template(
+    chord_templates,       # Change to chord_templates if desired
+    method = "euclidean",  # Try different distance metrics
+    norm = "manhattan"     # Try different norms
+  )
+
+saveRDS(murder_keygram, file="murder_keygram (Keygram).Rda")
+saveRDS(murder_chordogram, file="murder_chordogram (Chordogram).Rda")
+
+murder_keygram |> ggplot(
     aes(x = start + duration / 2, width = duration, y = name, fill = d)
   ) +
   geom_tile() +
@@ -119,3 +130,56 @@ twenty_five |>
   theme_minimal() +
   labs(x = "Time (s)", y = "")
 
+murder_chordogram |> ggplot(
+  aes(x = start + duration / 2, width = duration, y = name, fill = d)
+) +
+  geom_tile() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_minimal() +
+  labs(x = "Time (s)", y = "")
+
+wilay <-
+  get_tidy_audio_analysis("4ebcE2SmkG7nplvzFAWRu7") |>
+  compmus_align(bars, segments) |>
+  select(bars) |>
+  unnest(bars) |>
+  mutate(
+    pitches =
+      map(segments,
+          compmus_summarise, pitches,
+          method = "mean", norm = "manhattan"
+      )
+  )
+
+wilay_keygram <- wilay |> 
+  compmus_match_pitch_template(
+    key_templates,       # Change to chord_templates if desired
+    method = "euclidean",  # Try different distance metrics
+    norm = "manhattan"     # Try different norms
+  )
+
+wilay_chordogram <- wilay |> 
+  compmus_match_pitch_template(
+    chord_templates,       # Change to chord_templates if desired
+    method = "euclidean",  # Try different distance metrics
+    norm = "manhattan"     # Try different norms
+  )
+
+saveRDS(wilay_keygram, file="wilay (Keygram).Rda")
+saveRDS(wilay_chordogram, file="wilay (Chordogram).Rda")
+
+wilay_keygram |> ggplot(
+  aes(x = start + duration / 2, width = duration, y = name, fill = d)
+) +
+  geom_tile() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_minimal() +
+  labs(x = "Time (s)", y = "")
+
+wilay_chordogram |> ggplot(
+  aes(x = start + duration / 2, width = duration, y = name, fill = d)
+) +
+  geom_tile() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_minimal() +
+  labs(x = "Time (s)", y = "")

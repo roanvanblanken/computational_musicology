@@ -21,6 +21,7 @@ library(ggplot2)
 library(plotly)
 library(tidyverse)
 library(compmus)
+library(fontawesome)
 
 # Get playlists
 songs_i_like <- get_playlist_audio_features("", "6pl0C7qbIl5uoY3Tdf82oa")
@@ -34,7 +35,7 @@ songs_i_dislike <- songs_i_dislike %>%
   mutate(mode = ifelse(mode == 0, "Minor", "Major"))
 ```
 
-Track-Level Summary {data-icon="fas fa-music"}
+Track-Level Summary {data-icon="fa-chart-line"}
 =====================================
 
 Overview
@@ -210,3 +211,58 @@ tempogram_2 <- africa_cyclic |>
 
 ggplotly(tempogram_2, tooltip = "none", source = "none")
 ```
+
+Radar plot
+=====================================
+
+Overview
+--------------------------------------------------
+
+### Outliers
+
+```{r}
+# Get playlists
+songs_i_like <- get_playlist_audio_features("", "6pl0C7qbIl5uoY3Tdf82oa") %>%
+  mutate(playlist = 'Songs I like')
+songs_i_dislike <- get_playlist_audio_features("", "4bJQX5w7W4wEnHLmWqUIVY") %>%
+  mutate(playlist = 'Songs I dislike')
+
+# Combine the playlists into one data frame
+df <- rbind(songs_i_like, songs_i_dislike)
+
+# Remove non-plotable features (e.g., id, uri, etc.)
+df <- df[,c(2, 6:11, 13:16)]
+
+# Calculate the mean for each feature by playlist
+df_means <- df %>%
+  group_by(playlist) %>%
+  summarise(across(danceability:tempo, mean))
+
+# Create a data frame for plotting
+plot_data <- rbind(df_means, df)
+
+# Create a vector of variable names
+variables <- c("danceability", "energy", "loudness", 
+               "speechiness", "acousticness", 
+               "instrumentalness", "liveness", "valence", 
+               "tempo")
+
+# Create a palette for the plot
+colors <- c("#E41A1C","#377EB8","#4DAF4A","#984EA3","#FF7F00","#FFFF33","#A65628","#F781BF","#999999")
+
+# Create the radar plot
+radarchart(plot_data, 
+           axistype=1, 
+           pcol=colors, 
+           plwd=2, 
+           pty=20, 
+           title="My Music Preferences by Playlist", 
+           seg=6, 
+           maxmin=TRUE, 
+           vlabels=variables, 
+           vlcex=0.8, 
+           cglcol="grey", 
+           cglty=1, 
+           axislabcol="grey", 
+           caxislabels=seq(0, 1, by=0.2), 
+           calcex=0.8)

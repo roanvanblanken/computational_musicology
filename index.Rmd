@@ -3,11 +3,6 @@ title: "Computational Musicology - Final Portfolio"
 author: "Roan van Blanken"
 output: 
   flexdashboard::flex_dashboard:
-    theme:
-      base_font:
-        google: Prompt
-      code_font:
-        google: JetBrains Mono
     orientation: columns
     self_contained: false
 ---
@@ -753,7 +748,7 @@ dancewm |>
   labs(x = "", y = "")
 ```
 
-Chordograms (W.I.P)
+Chordograms
 =====================================
 
 Overview
@@ -836,7 +831,7 @@ tempogram_2 <- africa_cyclic |>
 ggplotly(tempogram_2, tooltip = "none", source = "none")
 ```
 
-Trained Model (W.I.P)
+Trained Model {data-icon="ion-options-outline}
 =====================================
 
 Overview
@@ -861,7 +856,7 @@ Column 2
 
 ```
 
-Conclusion
+Conclusion {data-icon="ion-document"}
 =====================================
 
 Column 1
