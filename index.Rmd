@@ -16,6 +16,7 @@ library(ggplot2)
 library(plotly)
 library(tidyverse)
 library(compmus)
+library(fontawesome)
 
 # Get playlists
 songs_i_like <- get_playlist_audio_features("", "6pl0C7qbIl5uoY3Tdf82oa")
@@ -28,6 +29,9 @@ songs_i_dislike <- get_playlist_audio_features("", "4bJQX5w7W4wEnHLmWqUIVY")
 songs_i_dislike <- songs_i_dislike %>%
   mutate(mode = ifelse(mode == 0, "Minor", "Major"))
 
+# Define a custom color palette
+random_palette <- colorRampPalette(c("#2c7bb6", "#abdda4", "#ffffbf", "#fdae61", "#d7191c"))(100)
+blue_red <- colorRampPalette(c("#00008B", "#ADD8E6", "#E6FFFF", "#FFE4E1", "#FF6347", "#8B0000"))(100)
 ```
 
 ```{r chords and keys setup, include=FALSE}
@@ -155,7 +159,7 @@ Feature analysis {.storyboard data-icon="fa-magnifying-glass"}
 
 ### Relationship between Valence, Energy, Loudness, and Mode for the songs I like 
 
-```{r}
+```{r songs_i_like plot}
 # Create a scatterplot
 songs_i_like %>%
   ggplot(aes(x = valence, y = energy, size = loudness, color = mode)) +
@@ -184,7 +188,7 @@ Overall, this plot provides insight into the features that make songs likable to
 
 ### Relationship between Valence, Energy, Loudness, and Mode for the songs I dislike
 
-```{r}
+```{r songs_i_dislike plot}
 # Create a scatterplot
 songs_i_dislike %>%
   ggplot(aes(x = valence, y = energy, size = loudness, color = mode)) +
@@ -210,7 +214,7 @@ Overall, this scatterplot provides insight into the musical features that I find
 
 ### Zooming in on Valence
 
-```{r plot}
+```{r valence_plot}
 plot_ly() %>%
   add_trace(data = songs_i_like, x = ~valence, type = "histogram", 
             histnorm = "probabilty density", name = "Songs I like", 
@@ -239,7 +243,7 @@ Songs I like seems to have **more valance** than songs I dislike.
 
 ### Zooming in on Energy
 
-```{r}
+```{r energy_plot}
 plot_ly() %>%
   add_trace(data = songs_i_like, x = ~energy, type = "histogram", 
             histnorm = "probabilty density", name = "Songs I like", 
@@ -267,7 +271,7 @@ Songs I like seem to have an energy between **0.7 and 0.9** while the songs I di
 
 ### Zooming in on Loudness
 
-```{r}
+```{r loudness_plot}
 plot_ly() %>%
   add_trace(data = songs_i_like, x = ~loudness, type = "histogram", 
             histnorm = "probabilty density", name = "Songs I like", 
@@ -315,10 +319,10 @@ Column 2 {.tabset}
 
 ### Timbre components
 
-```{r summary_2}
-cdata <- readRDS(file="timbre_data.Rda")
+```{r timbre_summary}
+timbre_data <- readRDS(file="data/timbre_data.Rda")
 
-plot1 <- cdata %>%
+plot1 <- timbre_data %>%
   ggplot(aes(x = factor(basis), y = value, fill = Playlist)) +
   geom_violin() +
   scale_fill_viridis_d() +
@@ -332,13 +336,11 @@ ggplotly(plot1)
 
 ```{r c01}
 # Create table for c01
-cdata <- readRDS(file="timbre_data.Rda")
-
-table_c01 <- cdata %>%
+table_c01 <- timbre_data %>%
   filter(basis == "c01") %>%
   group_by(Playlist) %>%
   slice_min(value, n = 1) %>%
-  bind_rows(cdata %>%
+  bind_rows(timbre_data %>%
               filter(basis == "c01") %>%
               group_by(Playlist) %>%
               slice_max(value, n = 1)) %>%
@@ -353,13 +355,11 @@ knitr::kable(table_c01, caption = "Table of maximum and minimum values of c01 fo
 
 ```{r c02}
 # Create table for c02
-cdata <- readRDS(file="timbre_data.Rda")
-
-table_c02 <- cdata %>%
+table_c02 <- timbre_data %>%
   filter(basis == "c02") %>%
   group_by(Playlist) %>%
   slice_min(value, n = 1) %>%
-  bind_rows(cdata %>%
+  bind_rows(timbre_data %>%
               filter(basis == "c02") %>%
               group_by(Playlist) %>%
               slice_max(value, n = 1)) %>%
@@ -373,13 +373,11 @@ knitr::kable(table_c02, caption = "Table of maximum and minimum values of c02 fo
 
 ```{r c03}
 # Create table for c03
-cdata <- readRDS(file="timbre_data.Rda")
-
-table_c03 <- cdata %>%
+table_c03 <- timbre_data %>%
   filter(basis == "c03") %>%
   group_by(Playlist) %>%
   slice_min(value, n = 1) %>%
-  bind_rows(cdata %>%
+  bind_rows(timbre_data %>%
               filter(basis == "c03") %>%
               group_by(Playlist) %>%
               slice_max(value, n = 1)) %>%
@@ -393,13 +391,11 @@ knitr::kable(table_c03, caption = "Table of maximum and minimum values of c03 fo
 
 ```{r c04}
 # Create table for c04
-cdata <- readRDS(file="timbre_data.Rda")
-
-table_c04 <- cdata %>%
+table_c04 <- timbre_data %>%
   filter(basis == "c04") %>%
   group_by(Playlist) %>%
   slice_min(value, n = 1) %>%
-  bind_rows(cdata %>%
+  bind_rows(timbre_data %>%
               filter(basis == "c04") %>%
               group_by(Playlist) %>%
               slice_max(value, n = 1)) %>%
@@ -425,7 +421,7 @@ Column 2
 
 ### State of Unrest
 
-```{r}
+```{r chromagram1}
 metal <-
   get_tidy_audio_analysis("3u4djE2yAEkKMWJEUOOJyT") |>
   select(segments) |>
@@ -524,130 +520,47 @@ A ceptrogram is a visual representation of the distribution of timbral character
 Column 2
 --------------------------------------------------
 
-### State of Unrest
+###
 
 ```{r ceptrogram 1}
-metal <-
-  get_tidy_audio_analysis("3u4djE2yAEkKMWJEUOOJyT") |> # Change URI.
-  compmus_align(bars, segments) |>                     # Change `bars`
-  select(bars) |>                                      #   in all three
-  unnest(bars) |>                                      #   of these lines.
-  mutate(
-    pitches =
-      map(segments,
-        compmus_summarise, pitches,
-        method = "rms", norm = "euclidean"              # Change summary & norm.
-      )
-  ) |>
-  mutate(
-    timbre =
-      map(segments,
-        compmus_summarise, timbre,
-        method = "rms", norm = "euclidean"              # Change summary & norm.
-      )
-  )
+state_of_unrest <- readRDS(file="data/Ceptrogram (state_of_unrest).Rda")
 
-ceptrogram1 <- metal |>
-  compmus_gather_timbre() |>
-  ggplot(
-    aes(
-      x = start + duration / 2,
-      width = duration,
-      y = basis,
-      fill = value
-    )
-  ) +
+ceptrogram1 <- state_of_unrest |>
+  ggplot(aes(x = start + duration / 2, width = duration, y = basis, fill = value)) +
   geom_tile() +
+  ggtitle("Ceptrogram - Lamb of God, Kreator: 'State of Unrest'") +
+  scale_fill_gradientn(colors = random_palette) +
   labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
-  scale_fill_viridis_c() +                              
-  theme_classic()
+  theme_minimal() +
+  scale_color_gradientn(colors = random_palette)
 
-ggplotly(ceptrogram1, tooltip = "none", source = "none") %>%
-  layout(
-    annotations = list(
-      list(
-        x = 1, y = -0.17,
-        text = "Data source: Spotify API\nAuthor: Roan van Blanken",
-        showarrow = FALSE,
-        xref = "paper",
-        yref = "paper",
-        font = list(size = 10),
-        align = "right",
-        xanchor = "right",
-        yanchor = "bottom",
-        pad = list(t = 0, r = 0, b = 10)
-      )
-    )
-  )
+ggplotly(ceptrogram1, tooltip = "none", source = "none")
 ```
 
-
-
-
-### Shut Up and Dance
+###
 
 ```{r ceptrogram 2}
-dancewm <-
-  get_tidy_audio_analysis("0kzw2tRyuL9rzipi5ntlIy") |> # Change URI.
-  compmus_align(bars, segments) |>                     # Change `bars`
-  select(bars) |>                                      #   in all three
-  unnest(bars) |>                                      #   of these lines.
-  mutate(
-    pitches =
-      map(segments,
-        compmus_summarise, pitches,
-        method = "rms", norm = "euclidean"              # Change summary & norm.
-      )
-  ) |>
-  mutate(
-    timbre =
-      map(segments,
-        compmus_summarise, timbre,
-        method = "rms", norm = "euclidean"              # Change summary & norm.
-      )
-  )
+shutupanddance <- readRDS(file="data/Ceptrogram (shutupanddance).Rda")
 
-ceptrogram2 <- dancewm |>
-  compmus_gather_timbre() |>
-  ggplot(
-    aes(
-      x = start + duration / 2,
-      width = duration,
-      y = basis,
-      fill = value
-    )
-  ) +
+ceptrogram2 <- shutupanddance |>
+  ggplot(aes(x = start + duration / 2, width = duration, y = basis, fill = value)) +
   geom_tile() +
+  ggtitle("Ceptrogram - WALK THE MOON: 'Shut up and Dance'") +
+  scale_fill_gradientn(colors = random_palette) +
   labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
-  scale_fill_viridis_c() +                              
-  theme_classic()
+  theme_minimal() +
+  scale_color_gradientn(colors = random_palette)
 
-ggplotly(ceptrogram2, tooltip = "none", source = "none") %>%
-  layout(
-    annotations = list(
-      list(
-        x = 1, y = -0.17,
-        text = "Data source: Spotify API\nAuthor: Roan van Blanken",
-        showarrow = FALSE,
-        xref = "paper",
-        yref = "paper",
-        font = list(size = 10),
-        align = "right",
-        xanchor = "right",
-        yanchor = "bottom",
-        pad = list(t = 0, r = 0, b = 10)
-      )
-    )
-  )
+ggplotly(ceptrogram2, tooltip = "none", source = "none")
 ```
 
-Self-similarity Matrices
+Self-similarity Matrices {data-icon="fas fa-share-from-square"}
 =====================================
 
 Overview {data-width=500}
 --------------------------------------------------
 
-### Overview
+###
 
 A self-similarity matrix is a visual representation of the similarity between different sections of a musical recording. Comparing the self-similarity matrices of four songs, "State of Unrest" in both timbre and chroma and "Shut up and Dance" in both timbre and chroma, reveals interesting differences in their internal structure.
 
@@ -660,11 +573,12 @@ These differences in internal structure could contribute to the overall appeal o
 column2 {data-width=250}
 --------------------------------------------------
 
-### State of Unrest - Self-similarity Matrix (Chroma)
+###
 
 ```{r compmus_self_similarity1}
-metal |>
-  compmus_self_similarity(pitches, "cosine") |> 
+state_of_unrest_chroma <- readRDS("data/Self-similarity Matrix (state_of_unrest_chroma).Rda")
+
+ssm1 <- state_of_unrest_chroma |> 
   ggplot(
     aes(
       x = xstart + xduration / 2,
@@ -675,18 +589,23 @@ metal |>
     )
   ) +
   geom_tile() +
-  coord_fixed() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_classic() +
-  labs(x = "", y = "")
+  ggtitle("Self-similarity Matrix (Chroma)\nLamb of God, Kreator: 'State of Unrest'") +
+  scale_fill_gradientn(colors = blue_red) +
+  labs(x = NULL, y = NULL, fill = "") +
+  theme_minimal() +
+  scale_color_gradientn(colors = blue_red) +
+  theme(plot.title = element_text(size = 10))
+
+ggplotly(ssm1, tooltip = "none", source = "none")
 ```
 
 
-### State of Unrest - Self-similarity Matrix (Timbre)
+###
 
 ```{r compmus_self_similarity2}
-metal |>
-  compmus_self_similarity(timbre, "cosine") |> 
+state_of_unrest_timbre <- readRDS("data/Self-similarity Matrix (state_of_unrest_timbre).Rda")
+
+ssm2 <- state_of_unrest_timbre |> 
   ggplot(
     aes(
       x = xstart + xduration / 2,
@@ -697,20 +616,25 @@ metal |>
     )
   ) +
   geom_tile() +
-  coord_fixed() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_classic() +
-  labs(x = "", y = "")
+  ggtitle("Self-similarity Matrix (Timbre)\nLamb of God, Kreator: 'State of Unrest'") +
+  scale_fill_gradientn(colors = blue_red) +
+  labs(x = NULL, y = NULL, fill = "") +
+  theme_minimal() +
+  scale_color_gradientn(colors = blue_red) +
+  theme(plot.title = element_text(size = 10))
+
+ggplotly(ssm2, tooltip = "none", source = "none")
 ```
 
 column3 {data-width=250}
 --------------------------------------------------
 
-### Shut Up and Dance - Self-similarity Matrix (Chroma)
+###
 
 ```{r compmus_self_similarity3}
-dancewm |>
-  compmus_self_similarity(pitches, "cosine") |> 
+shutupanddance_chroma <- readRDS("data/Self-similarity Matrix (shutupanddance_chroma).Rda")
+
+ssm3 <- shutupanddance_chroma |> 
   ggplot(
     aes(
       x = xstart + xduration / 2,
@@ -721,17 +645,22 @@ dancewm |>
     )
   ) +
   geom_tile() +
-  coord_fixed() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_classic() +
-  labs(x = "", y = "")
+  ggtitle("Self-similarity Matrix (Chroma)\nWALK THE MOON: 'Shut up and Dance'") +
+  scale_fill_gradientn(colors = blue_red) +
+  labs(x = NULL, y = NULL, fill = "") +
+  theme_minimal() +
+  scale_color_gradientn(colors = blue_red) +
+  theme(plot.title = element_text(size = 10))
+
+ggplotly(ssm3, tooltip = "none", source = "none")
 ```
 
-### Shut Up and Dance - Self-similarity Matrix (Timbre)
+###
 
 ```{r compmus_self_similarity4}
-dancewm |>
-  compmus_self_similarity(timbre, "cosine") |> 
+shutupanddance_timbre <- readRDS("data/Self-similarity Matrix (shutupanddance_timbre).Rda")
+
+ssm4 <- shutupanddance_timbre |> 
   ggplot(
     aes(
       x = xstart + xduration / 2,
@@ -742,10 +671,14 @@ dancewm |>
     )
   ) +
   geom_tile() +
-  coord_fixed() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_classic() +
-  labs(x = "", y = "")
+  ggtitle("Self-similarity Matrix (Timbre)\nWALK THE MOON: 'Shut up and Dance'") +
+  scale_fill_gradientn(colors = blue_red) +
+  labs(x = NULL, y = NULL, fill = "") +
+  theme_minimal() +
+  scale_color_gradientn(colors = blue_red) +
+  theme(plot.title = element_text(size = 10))
+
+ggplotly(ssm4, tooltip = "none", source = "none")
 ```
 
 Chordograms
@@ -793,19 +726,16 @@ Column 2
 ### 
 
 ```{r tempogram_1}
-# Define a custom color palette
-blues_purples <- colorRampPalette(c("#2c7bb6", "#abdda4", "#ffffbf", "#fdae61", "#d7191c"))(100)
-
-starstruck_cyclic <- readRDS(file="starstruck_cyclic (Tempogram).Rda")
+starstruck_cyclic <- readRDS(file="data/Tempogram (starstruck_cyclic).Rda")
 
 tempogram_1 <- starstruck_cyclic |>
   ggplot(aes(x = time, y = bpm, fill = power)) +
   geom_raster() +
   ggtitle("Cyclic Tempogram - Years & Years: 'Starstruck'") +
-  scale_fill_gradientn(colors = blues_purples) +
+  scale_fill_gradientn(colors = random_palette) +
   labs(x = "Time (s)", y = "Tempo (BPM)") +
   theme_minimal() +
-  scale_color_gradientn(colors = blues_purples)
+  scale_color_gradientn(colors = random_palette)
 
 ggplotly(tempogram_1, tooltip = "none", source = "none")
 ```
@@ -813,19 +743,16 @@ ggplotly(tempogram_1, tooltip = "none", source = "none")
 ### 
 
 ```{r tempogram_2}
-# Define a custom color palette
-blues_purples <- colorRampPalette(c("#2c7bb6", "#abdda4", "#ffffbf", "#fdae61", "#d7191c"))(100)
-
-africa_cyclic <- readRDS(file="africa_cyclic (Tempogram).Rda")
+africa_cyclic <- readRDS(file="data/Tempogram (africa_cyclic).Rda")
 
 tempogram_2 <- africa_cyclic |>
   ggplot(aes(x = time, y = bpm, fill = power)) +
   geom_raster() +
   ggtitle("Cyclic Tempogram - Africa: 'Toto'") +
-  scale_fill_gradientn(colors = blues_purples) +
+  scale_fill_gradientn(colors = random_palette) +
   labs(x = "Time (s)", y = "Tempo (BPM)") +
   theme_minimal() +
-  scale_color_gradientn(colors = blues_purples)
+  scale_color_gradientn(colors = random_palette)
 
 ggplotly(tempogram_2, tooltip = "none", source = "none")
 ```
