@@ -3,18 +3,20 @@ library(ggplot2)
 library(tidyverse)
 library(compmus)
 
-wilay <- get_tidy_audio_analysis("4ebcE2SmkG7nplvzFAWRu7")
 
-wilay_normal <- wilay |>
+
+high_hopes <- get_tidy_audio_analysis("1rqqCSm0Qe4I9rUvWncaom")
+
+high_hopes_normal <- high_hopes |>
   tempogram(window_size = 8, hop_size = 1, cyclic = FALSE)
 
-wilay_cyclic <- wilay |>
+high_hopes_cyclic <- high_hopes |>
   tempogram(window_size = 8, hop_size = 1, cyclic = TRUE)
 
-saveRDS(wilay_normal, file="data/Tempogram (wilay_normal).Rda")
-saveRDS(wilay_cyclic, file="data/Tempogram (wilay_cyclic).Rda")
+saveRDS(high_hopes_normal, file="data/Tempogram (high_hopes_normal).Rda")
+saveRDS(high_hopes_cyclic, file="data/Tempogram (high_hopes_cyclic).Rda")
 
-wilay_normal |>
+high_hopes_normal |>
   ggplot(aes(x = time, y = bpm, fill = power)) +
   geom_raster() +
   ggtitle("Normal") +
@@ -22,7 +24,7 @@ wilay_normal |>
   labs(x = "Time (s)", y = "Tempo (BPM)") +
   theme_classic()
 
-wilay_cyclic |>
+high_hopes_cyclic |>
   ggplot(aes(x = time, y = bpm, fill = power)) +
   geom_raster() +
   ggtitle("Cyclic") +
@@ -30,18 +32,18 @@ wilay_cyclic |>
   labs(x = "Time (s)", y = "Tempo (BPM)") +
   theme_classic()
 
-starstruck <- get_tidy_audio_analysis("2WJVFqVQ3ivhAoAQWzEzeL")
+fascination <- get_tidy_audio_analysis("5AKQ1JHezaXDmN5SyMSpEr")
 
-starstruck_normal <- starstruck |>
+fascination_normal <- fascination |>
   tempogram(window_size = 8, hop_size = 1, cyclic = FALSE)
 
-starstruck_cyclic <- starstruck |>
+fascination_cyclic <- fascination |>
   tempogram(window_size = 8, hop_size = 1, cyclic = TRUE)
 
-saveRDS(starstruck_normal, file="data/Tempogram (starstruck_normal).Rda")
-saveRDS(starstruck_cyclic, file="data/Tempogram (starstruck_cyclic).Rda")
+saveRDS(fascination_normal, file="data/Tempogram (fascination_normal).Rda")
+saveRDS(fascination_cyclic, file="data/Tempogram (fascination_cyclic).Rda")
 
-starstruck_normal |>
+fascination_normal |>
   ggplot(aes(x = time, y = bpm, fill = power)) +
   geom_raster() +
   ggtitle("Normal") +
@@ -49,34 +51,7 @@ starstruck_normal |>
   labs(x = "Time (s)", y = "Tempo (BPM)") +
   theme_classic()
 
-starstruck_cyclic |>
-  ggplot(aes(x = time, y = bpm, fill = power)) +
-  geom_raster() +
-  ggtitle("Cyclic") +
-  scale_fill_viridis_c(guide = "none") +
-  labs(x = "Time (s)", y = "Tempo (BPM)") +
-  theme_classic()
-
-africa <- get_tidy_audio_analysis("2374M0fQpWi3dLnB54qaLX")
-
-africa_normal <- africa |>
-  tempogram(window_size = 8, hop_size = 1, cyclic = FALSE)
-
-africa_cyclic <- africa |>
-  tempogram(window_size = 8, hop_size = 1, cyclic = TRUE)
-
-saveRDS(africa_normal, file="data/Tempogram (africa_normal).Rda")
-saveRDS(africa_cyclic, file="data/Tempogram (africa_cyclic).Rda")
-
-africa_normal |>
-  ggplot(aes(x = time, y = bpm, fill = power)) +
-  geom_raster() +
-  ggtitle("Normal") +
-  scale_fill_viridis_c(guide = "none") +
-  labs(x = "Time (s)", y = "Tempo (BPM)") +
-  theme_classic()
-
-africa_cyclic |>
+fascination_cyclic |>
   ggplot(aes(x = time, y = bpm, fill = power)) +
   geom_raster() +
   ggtitle("Cyclic") +

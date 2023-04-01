@@ -282,6 +282,8 @@ Musical preferences are complex and can be influenced by various factors, includ
 
 The plot that highlights the difference in loudness between songs that I like and songs that I dislike may provide insight into how loudness influences my musical preferences. The plot may indicate that my preferred songs tend to be louder than songs that I dislike, suggesting that loudness is an essential characteristic of my musical taste. However, it is crucial to remember that loudness is just one factor that can influence musical preferences.
 
+It is worth noting that loudness is not always a reliable indicator of a songs quality or emotional impact. A quiet ballad or a soothing instrumental piece can be just as powerful and moving as a loud and energetic track. Therefore, while loudness may be an important characteristic of my preferred songs, it should not be the only factor considered when evaluating the quality or emotional impact of a musical piece.
+
 Track-Level Summary {data-icon="fa-chart-bar"}
 =====================================
 
@@ -395,14 +397,21 @@ knitr::kable(table_c04, caption = "Table of maximum and minimum values of c04 fo
 Chromagrams {data-icon="fa-music"}
 =====================================
 
-Column 1
+Text about chromagrams {data-width=400}
 --------------------------------------------------
 
 ###
 
-A chromagram is a visual representation of the distribution of pitches in a musical recording. Comparing the chromagrams of two songs, "State of Unrest" from the playlist of disliked songs and "Shut up and Dance" from the playlist of liked songs, reveals interesting differences in their pitch distribution. In "State of Unrest," there is a strong concentration of pitches around the D chord, indicating a relatively stable harmonic structure. On the other hand, "Shut up and Dance" shows more variation in pitch distribution, with a wider range of pitches around the F#, G#, and A# chords. This suggests that "Shut up and Dance" has a more complex harmonic structure with more varied chord progressions. These differences in pitch distribution could contribute to the overall appeal of the songs and could be further explored in future analyses.
+Chromagrams are powerful tools for analyzing the harmonic content and structural features of music. In this portfolio, we examined two songs from my musical corpus: "What I Like About You" from the playlist 'Songs I Like' and "Murder" from the playlist 'Songs I Dislike'. These songs were analyzed using their respective chromagrams to gain insight into their harmonic structures and to better understand my personal musical preferences.
 
-Column 2
+["What I Like About You"](https://open.spotify.com/track/4ebcE2SmkG7nplvzFAWRu7?si=c432fccad51845ae) by The Romantics has a simple harmonic structure that consists of the chords A, G#, E, and D. The corresponding chromagram for this song shows a clear and consistent distribution of these pitches. This simple harmonic structure may contribute to why I enjoy this song and have included it in my 'Songs I Like' playlist.
+
+On the other hand, ["Murder"](https://open.spotify.com/track/0wFPKFtBes3NTyTW4bkjrz?si=796b185ece5d4a75) has a more complex harmonic structure that includes frequent modulations but tends to avoid the pitches C# and C. The chromagram for this song displays a diverse distribution of pitches, indicating a more intricate harmonic structure and chord progression. This variation in pitch distribution may be the reason why I dislike this song and have included it in my 'Songs I Dislike' playlist.
+
+By comparing the chromagrams of these two songs, we can gain insights into the underlying harmonic structures that contribute to my personal musical taste. The analysis of chromagrams allows us to identify commonalities and differences between songs, which can be used to curate playlists that align with our individual musical preferences.
+
+
+Chromagrams {data-width=600}
 --------------------------------------------------
 
 ###
@@ -468,14 +477,23 @@ ggplotly(chromogram2, tooltip = "none", source = "none")
 Ceptrograms {data-icon="fa-headphones-alt"}
 =====================================
 
-Overview
+Text about ceptrograms {data-width=400}
 --------------------------------------------------
 
-### Chart A
+###
 
-A ceptrogram is a visual representation of the distribution of timbral characteristics in a musical recording. Comparing the ceptrograms of two songs, "State of Unrest" from the playlist of disliked songs and "Shut up and Dance" from the playlist of liked songs, reveals interesting differences in their timbral distribution. In "State of Unrest," there is a strong concentration of timbral characteristics around a certain range, indicating a relatively stable sonic texture. On the other hand, "Shut up and Dance" shows more variation in timbral distribution, with a wider range of timbral characteristics. This suggests that "Shut up and Dance" has a more complex and varied sound texture. These differences in timbral distribution could contribute to the overall appeal of the songs and could be further explored in future analyses.
+Ceptrograms are an essential tool for analyzing the timbral characteristics of a musical recording. A ceptrogram provides a visual representation of the distribution of timbral characteristics such as brightness, warmth, and depth in a song. By comparing the ceptrograms of two songs, we can gain insights into the similarities and differences in their timbral characteristics and use this knowledge to better understand our personal musical preferences.
 
-Column 2
+In this portfolio, we analyzed two songs from my corpus, ["Shut Up and Dance"](https://open.spotify.com/track/4kbj5MwxO1bq9wjT5g9HaA?si=caf4a51f4d4645c4) from the 'Songs I Like' playlist and ["State of Unrest"](https://open.spotify.com/track/3u4djE2yAEkKMWJEUOOJyT?si=1230a654e318462a) from the 'Songs I Dislike' playlist, using their respective ceptrograms to understand their timbral structures and to gain insights into why I might have included them in their respective playlists.
+
+Upon analyzing the ceptrogram of "Shut Up and Dance," we observed a strong presence around the c01 and c02 timbre coefficients. These coefficients indicate that the song has a bright and loud timbral quality, which may contribute to why I enjoy listening to it and why it is included in my 'Songs I Like' playlist.
+
+On the other hand, "State of Unrest" exhibits a similar distribution of timbral characteristics as "Shut Up and Dance," with a strong presence around the c01 and c02 timbre coefficients. However, this song is included in my 'Songs I Dislike' playlist, indicating that timbre is not the main factor that determines my musical preferences.
+
+In conclusion, the analysis of ceptrograms for the songs "Shut Up and Dance" and "State of Unrest" provides us with insights into their timbral structures and how they may contribute to our personal musical preferences. While "Shut Up and Dance" exhibits a bright and loud timbral quality that may explain why it is included in the 'Songs I Like' playlist, "State of Unrest" has a similar distribution of timbral characteristics but is included in the 'Songs I Dislike' playlist, indicating that other factors beyond timbre play a role in determining our musical preferences.
+
+
+Ceptrograms {data-width=600}
 --------------------------------------------------
 
 ###
@@ -512,23 +530,80 @@ ceptrogram2 <- shutupanddance |>
 ggplotly(ceptrogram2, tooltip = "none", source = "none")
 ```
 
-Self-similarity Matrices {data-icon="fas fa-share-from-square"}
+
+Tempograms {data-icon="fas fa-drum"}
 =====================================
 
-Overview {data-width=500}
+Text about tempograms {data-width=400}
 --------------------------------------------------
 
 ###
 
-A self-similarity matrix is a visual representation of the similarity between different sections of a musical recording. Comparing the self-similarity matrices of four songs, "State of Unrest" in both timbre and chroma and "Shut up and Dance" in both timbre and chroma, reveals interesting differences in their internal structure.
+Tempo, which refers to the speed or pace of a piece of music, is an essential aspect that greatly influences listeners' perception and emotional response to music. Some songs have a slow and steady tempo that can evoke feelings of calmness and relaxation, while others have a fast and upbeat tempo that may evoke feelings of excitement and energy. Tempograms are visual representations of the tempo fluctuations in a piece of music over time. They provide a useful tool for analyzing and comparing the tempo patterns of different songs, allowing us to gain insights into the structure and dynamics of musical compositions.
 
-In the self-similarity matrix for the timbral characteristics of "State of Unrest," there are clearly defined blocks, indicating repeated patterns in the sound. In contrast, the timbral self-similarity matrix for "Shut up and Dance" shows a more continuous, fluid structure, suggesting a more unpredictable and dynamic sound.
+To explore the range of tempos in the 'Songs I like' playlist, I have selected two songs with the highest and lowest tempos, namely ['High Hopes'](https://open.spotify.com/track/1rqqCSm0Qe4I9rUvWncaom?si=14d92d54789c4081) by Panic! At The Disco with a tempo of 82.014 and ['Fascination'](https://open.spotify.com/track/5AKQ1JHezaXDmN5SyMSpEr?si=6478428cf0cf45a7) by Alphabeat with a tempo of 193.968. These songs offer a glimpse into the variety of tempos found in the playlist and provide an opportunity to observe any tempo changes in slow and fast songs.
 
-Similarly, the chroma self-similarity matrix for "State of Unrest" shows a highly repetitive structure with clear diagonal lines, indicating the presence of repeated chord progressions. On the other hand, the chroma self-similarity matrix for "Shut up and Dance" shows a more dispersed and varied pattern, indicating a more diverse harmonic structure.
+Upon analyzing the Tempograms, it can be observed that both songs maintain a relatively consistent tempo with occasional variations. 'High Hopes' mostly maintains a tempo of around 80 BMP, while 'Fascination' hovers around 98 BPM. However, 'High Hopes' displays more frequent tempo changes compared to 'Fascination.'
 
-These differences in internal structure could contribute to the overall appeal of the songs and provide insights into the musical composition and arrangement. Further analyses could explore the relationship between these structural characteristics and the emotional and perceptual responses to the music.
+In conclusion, the selected songs from the 'Songs I like' playlist offer insights into the range of tempos in music that I enjoy. The Tempogram analysis has also revealed interesting patterns in tempo fluctuations, which can further enhance our understanding of the role of tempo in music taste.
 
-column2 {data-width=250}
+
+Tempograms {data-width=600}
+--------------------------------------------------
+
+### 
+
+```{r tempogram_1}
+high_hopes_cyclic <- readRDS(file="data/Tempogram (high_hopes_cyclic).Rda")
+
+tempogram_1 <- high_hopes_cyclic |>
+  ggplot(aes(x = time, y = bpm, fill = power)) +
+  geom_raster() +
+  ggtitle("Cyclic Tempogram - Panic! At The Disco: 'High Hopes'") +
+  scale_fill_gradientn(colors = random_palette) +
+  labs(x = "Time (s)", y = "Tempo (BPM)") +
+  theme_minimal() +
+  scale_color_gradientn(colors = random_palette)
+
+ggplotly(tempogram_1, tooltip = "none", source = "none")
+```
+
+### 
+
+```{r tempogram_2}
+fascination_cyclic <- readRDS(file="data/Tempogram (fascination_cyclic).Rda")
+
+tempogram_2 <- fascination_cyclic |>
+  ggplot(aes(x = time, y = bpm, fill = power)) +
+  geom_raster() +
+  ggtitle("Cyclic Tempogram - Alphabeat: 'Fascination'") +
+  scale_fill_gradientn(colors = random_palette) +
+  labs(x = "Time (s)", y = "Tempo (BPM)") +
+  theme_minimal() +
+  scale_color_gradientn(colors = random_palette)
+
+ggplotly(tempogram_2, tooltip = "none", source = "none")
+```
+
+Self-similarity Matrices {data-icon="fas fa-share-from-square"}
+=====================================
+
+text over SSM {data-width=500}
+--------------------------------------------------
+
+###
+
+A self-similarity matrix is a visual representation of the similarity between different sections of a musical recording. This tool allows us to observe and analyze the internal structure of a song in a way that provides valuable insights into its musical composition and arrangement. By comparing the self-similarity matrices of two songs, one I like a lot and one I dislike, ["State of Unrest"](https://open.spotify.com/track/3u4djE2yAEkKMWJEUOOJyT?si=1230a654e318462a) and ["Shut Up and Dance"](https://open.spotify.com/track/4kbj5MwxO1bq9wjT5g9HaA?si=caf4a51f4d4645c4) in both timbre and chroma, we can gain a deeper understanding of how these songs are structured and how they differ from each other.
+
+When analyzing the self-similarity matrix for the timbral characteristics of the songs, we can see variations in the repetition of certain musical motifs. These motifs could be rhythmic patterns, melodies, or harmonies that repeat throughout the song, providing a sense of continuity and coherence. In the case of "State of Unrest" and "Shut Up and Dance," we can see that the two songs differ in terms of the frequency and regularity of these motifs. "Shut Up and Dance" has a more consistent and structured pattern of repetition, while "State of Unrest" has a less predictable and more sporadic one.
+
+Similarly, the chroma self-similarity matrix provides insights into how the songs' chord progressions and tonal centers change over time. This information is particularly valuable in understanding the harmonic structure of a song, which is essential in determining its overall mood and emotional impact. In the case of "State of Unrest" and "Shut Up and Dance," we can see that the two songs differ in terms of their harmonic complexity and diversity. "Shut Up and Dance" has a more straightforward and predictable harmonic structure, while "State of Unrest" explores a wider range of harmonic possibilities.
+
+One notable difference between the two songs is that, around the 150-second mark, the bridge section in "Shut Up and Dance" is clearly visible in both timbre and chroma self-similarity matrices, while in "State of Unrest," this section is less structured and organized. 
+
+Through this analysis, I can see that "Shut Up and Dance" follows a more traditional song structure, with a clear and predictable form that includes defined verses, choruses, and bridges. In contrast, "State of Unrest" may have a more unconventional arrangement, with a less predictable and more sporadic pattern of repetition. While both songs have their unique qualities, I tend to respond positively to songs that have a clear and familiar structure, and this could be one of the reasons why I find "Shut Up and Dance" more appealing than "State of Unrest."
+
+SSM {data-width=250}
 --------------------------------------------------
 
 ###
@@ -637,82 +712,6 @@ ssm4 <- shutupanddance_timbre |>
   theme(plot.title = element_text(size = 10))
 
 ggplotly(ssm4, tooltip = "none", source = "none")
-```
-
-Chordograms
-=====================================
-
-Overview
---------------------------------------------------
-
-### Chart A
-
-WIP
-
-Column 2
---------------------------------------------------
-
-### 
-
-```{r chordogram_1}
-
-```
-
-### 
-
-```{r chordogram_2}
-
-```
-
-Tempograms {data-icon="fas fa-drum"}
-=====================================
-
-Overview
---------------------------------------------------
-
-### Chart A
-
-For the Tempograms, I selected the two songs from the 'Songs I like' playlist with the highest and lowest c01 components based on the track-level-summary (see [track-level-summary](index.html#track-level-summary)). Specifically, I chose 'Africa' by Toto with the highest c01 value, and 'Starstruck' by Years & Years with the lowest c01 value. This selection was made to investigate potential differences in tempo between the songs.
-
-From the plots, it can be observed that both songs have a relatively steady tempo with occasional variations. However, 'Starstruck' exhibits more frequent tempo changes, which can be explained by its lower c01 timbre component. The c01 component measures the overall loudness of the song.
-
-In conclusion, the selection of songs based on their c01 component values allowed for an exploration of potential differences in tempo patterns and provided insights into the relationship between c01 values and overall loudness. Additionally, it is worth noting that I tend to prefer songs with a consistent tempo, which may explain my personal preference for songs with similar overall tempos.
-
-Column 2
---------------------------------------------------
-
-### 
-
-```{r tempogram_1}
-starstruck_cyclic <- readRDS(file="data/Tempogram (starstruck_cyclic).Rda")
-
-tempogram_1 <- starstruck_cyclic |>
-  ggplot(aes(x = time, y = bpm, fill = power)) +
-  geom_raster() +
-  ggtitle("Cyclic Tempogram - Years & Years: 'Starstruck'") +
-  scale_fill_gradientn(colors = random_palette) +
-  labs(x = "Time (s)", y = "Tempo (BPM)") +
-  theme_minimal() +
-  scale_color_gradientn(colors = random_palette)
-
-ggplotly(tempogram_1, tooltip = "none", source = "none")
-```
-
-### 
-
-```{r tempogram_2}
-africa_cyclic <- readRDS(file="data/Tempogram (africa_cyclic).Rda")
-
-tempogram_2 <- africa_cyclic |>
-  ggplot(aes(x = time, y = bpm, fill = power)) +
-  geom_raster() +
-  ggtitle("Cyclic Tempogram - Africa: 'Toto'") +
-  scale_fill_gradientn(colors = random_palette) +
-  labs(x = "Time (s)", y = "Tempo (BPM)") +
-  theme_minimal() +
-  scale_color_gradientn(colors = random_palette)
-
-ggplotly(tempogram_2, tooltip = "none", source = "none")
 ```
 
 Trained Model {data-icon="ion-options-outline}

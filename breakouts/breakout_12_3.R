@@ -99,3 +99,66 @@ indie_knn |> get_conf_mat() |> autoplot(type = "mosaic")
 indie_knn |> get_conf_mat() |> autoplot(type = "heatmap")
 
 indie_knn |> get_pr()
+
+# Create a decision tree model
+decision_tree_model <-
+  decision_tree() |> 
+  set_mode("classification") |> 
+  set_engine("rpart")
+
+# Fit the decision tree model with cross-validation
+indie_decision_tree <- 
+  workflow() |> 
+  add_recipe(indie_recipe) |> 
+  add_model(decision_tree_model) |> 
+  fit_resamples(indie_cv, control = control_resamples(save_pred = TRUE))
+
+# Get confusion matrix
+indie_decision_tree |> get_conf_mat()
+
+# Plot confusion matrix as mosaic plot
+indie_decision_tree |> get_conf_mat() |> autoplot(type = "mosaic")
+
+# Plot confusion matrix as heatmap
+indie_decision_tree |> get_conf_mat() |> autoplot(type = "heatmap")
+
+# Get precision and recall
+indie_decision_tree |> get_pr()
+
+# Fit the decision tree model without cross-validation
+indie_decision_tree_no_cv <- 
+  workflow() |> 
+  add_recipe(indie_recipe) |> 
+  add_model(decision_tree_model) |> 
+  fit(data = indie_features)
+
+# Extract the rpart object
+rpart_obj <- indie_decision_tree_no_cv %>% pull_workflow_fit() %>% pluck("fit")
+
+# Plot the decision tree
+rpart.plot(rpart_obj, type = 1, extra = 101, cex = 0.8, box.palette = "auto", tweak = 1.2, roundint = FALSE)
+
+# Create a random forest model
+random_forest_model <-
+  rand_forest() |> 
+  set_mode("classification") |> 
+  set_engine("randomForest")
+
+# Fit the random forest model with cross-validation
+indie_random_forest <- 
+  workflow() |> 
+  add_recipe(indie_recipe) |> 
+  add_model(random_forest_model) |> 
+  fit_resamples(indie_cv, control = control_resamples(save_pred = TRUE))
+
+# Get confusion matrix
+indie_random_forest |> get_conf_mat()
+
+# Plot confusion matrix as mosaic plot
+indie_random_forest |> get_conf_mat() |> autoplot(type = "mosaic")
+
+# Plot confusion matrix as heatmap
+indie_random_forest |> get_conf_mat() |> autoplot(type = "heatmap")
+
+# Get precision and recall
+indie_random_forest |> get_pr()
