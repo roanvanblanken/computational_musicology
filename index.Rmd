@@ -178,13 +178,13 @@ songs_i_like %>%
 
 ---
 
-Based from this scatterplot it seems like I tend to like songs that are loud, with a range of loudness values represented in the plot. I also seem to be drawn to songs that are high-energy, as they're clustered towards the upper-right portion of the plot where both the energy and loudness values are high.
+Spotify's track-level features, such as valence, danceability, energy, and loudness, offer valuable insights into the underlying patterns of my personal music preferences. I selected these features as they are commonly used to describe the overall mood, intensity, and emotional tone of a song, allowing us to better understand the characteristics that define the songs I like and dislike [(Serra et al.)](https://pubmed.ncbi.nlm.nih.gov/22837813/). By examining these features, we can gain a deeper understanding of the traits that influence my musical taste.
 
-As for the valence of the songs I like, it appears to be centered around 0.5, but mostly falls between 0.5 and 1.0. This suggests to me that I tend to prefer songs with a positive emotional valence, which could contribute to their appeal.
+Based on the first scatterplot, it seems like I tend to like songs that are loud, with a range of loudness values represented in the plot. I also seem to be drawn to songs that are high-energy, as they're clustered towards the upper-right portion of the plot where both the energy and loudness values are high.
 
-One interesting thing I noticed in the plot is that the songs I like are equally distributed between major and minor keys, as indicated by the color coding in the plot. This suggests to me that the mode of the songs I like doesn't strongly influence my preference for them.
+As for the valence of the songs I like, it appears to be centered around 0.5, but mostly falls between 0.5 and 1.0. This suggests that I tend to prefer songs with a positive emotional valence, which could contribute to their appeal.
 
-Overall, this plot provides insight into the features that make songs likable to me, highlighting the importance of loudness, energy, valence, and mode in my musical taste.
+One interesting thing I noticed in the plot is that the songs I like are equally distributed between major and minor keys, as indicated by the color coding in the plot. This suggests that the mode of the songs I like doesn't strongly influence my preference for them.
 
 ### Relationship between Valence, Energy, Loudness, and Mode for the songs I dislike
 
@@ -206,11 +206,11 @@ songs_i_dislike %>%
 
 ---
 
-Based on the scatterplot of songs I dislike, it seems that they are generally less loud compared to the songs I like. While they still tend to have high energy, they often have a lower valence. This suggests to me that I may prefer songs that are more uplifting or positive in emotional tone, rather than those that are more somber or negative.
+Looking at the scatterplot of songs I don't like, I can see that they're usually not as loud as the songs I enjoy. Even though they still have high energy levels, they often have lower valence. This makes me believe that I might like songs that have a more positive and uplifting vibe, rather than ones that are more downbeat or sad.
 
-Interestingly, like the songs I like, the songs I dislike are similarly distributed between major and minor keys, as indicated by the color coding in the plot. This seems to suggest that the mode of a song is not a major factor in whether or not I like it.
+It's interesting to see that, just like the songs I like, the songs I don't like are spread out pretty evenly between major and minor keys. This tells me that the key of a song doesn't really play a big role in whether I like it or not.
 
-Overall, this scatterplot provides insight into the musical features that I find unappealing in songs, highlighting the importance of loudness, energy, and valence in my musical taste.
+Another thing I noticed is that the songs I don't like seem to have a smaller range of loudness and energy compared to the songs I do like. This could mean that I'm more open to different levels of intensity and dynamics when it comes to music I enjoy, while the music I don't like might have more in common in terms of how loud and energetic they are.
 
 ### Zooming in on Valence
 
@@ -225,21 +225,16 @@ plot_ly() %>%
   layout(xaxis = list(title = "Valence"), yaxis = list(title = "Density"),
          title = "Valence Distribution",
          showlegend = TRUE,
-         legend = list(title = "", orientation = "h"),
-         annotations = list(x = 1, y = -0.15, 
-                            text = "Data source: Spotify API\nAuthor: Roan van Blanken",
-                            showarrow = FALSE, xref = "paper", yref = "paper",
-                            font = list(size = 10),
-                            align = "right",
-                            xanchor = "right",
-                            yanchor = "bottom",
-                            pad = list(t = 0, r = 0, b = 10)))
-
+         legend = list(title = "", orientation = "h"))
 ```
 
 ---
 
-Songs I like seems to have **more valance** than songs I dislike.
+This plot provides a visual representation of how valence is distributed among two different sets of songs: 'Songs I like' and 'Songs I dislike'.
+
+Valence is a measure of how positive or negative a musical piece sounds, with a scale that ranges from negative to positive values. The plot shows two histograms, one in light blue representing the valence distribution for the songs that I like, and the other in light coral representing the valence distribution for the songs that I dislike.
+
+By looking at the plot, we can see that the valence distribution for the songs that I like is skewed towards the positive end of the spectrum, indicating that the songs the I like tend to have a more positive sound. In contrast, the valence distribution for the songs that I dislike is more skewed towards the negative end of the spectrum, suggesting that the songs I dislike have a more negative sound.
 
 ### Zooming in on Energy
 
@@ -254,20 +249,16 @@ plot_ly() %>%
   layout(xaxis = list(title = "Energy"), yaxis = list(title = "Density"),
          title = "Energy Distribution",
          showlegend = TRUE,
-         legend = list(title = "", orientation = "h"),
-         annotations = list(x = 1, y = -0.15, 
-                            text = "Data source: Spotify API\nAuthor: Roan van Blanken",
-                            showarrow = FALSE, xref = "paper", yref = "paper",
-                            font = list(size = 10),
-                            align = "right",
-                            xanchor = "right",
-                            yanchor = "bottom",
-                            pad = list(t = 0, r = 0, b = 10)))
+         legend = list(title = "", orientation = "h"))
 ```
 
 ---
 
-Songs I like seem to have an energy between **0.7 and 0.9** while the songs I dislike seems to have an energy around **0.95**.
+This plot provides insight into the energy distribution of two different sets of songs: 'Songs I like' and 'Songs I dislike'. Energy is a measure of how intense and active a musical piece is, with a scale that ranges from low to high values. The plot displays two histograms, one in light green representing the energy distribution for the songs that I like, and the other in coral representing the energy distribution for the songs that I dislike.
+
+Upon examining the plot, we can see that the energy distribution for the songs that I like is concentrated between 0.7 and 0.9, with a peak around 0.8. This indicates that the songs that I enjoy tend to have a moderate level of energy, without being too intense or too mellow. In contrast, the energy distribution for the songs that I dislike is concentrated around 0.95, indicating that the songs that I find unfavorable tend to be more energetic.
+
+The findings of this plot suggest that energy may be an important factor in shaping my musical preferences. However, it is essential to note that energy is just one of many factors that can influence an individual's musical tastes.
 
 ### Zooming in on Loudness
 
@@ -282,21 +273,14 @@ plot_ly() %>%
   layout(xaxis = list(title = "Loudness"), yaxis = list(title = "Density"),
          title = "Loudness Distribution",
          showlegend = TRUE,
-         legend = list(title = "", orientation = "h"),
-         annotations = list(x = 1, y = -0.15, 
-                            text = "Data source: Spotify API\nAuthor: Roan van Blanken",
-                            showarrow = FALSE, xref = "paper", yref = "paper",
-                            font = list(size = 10),
-                            align = "right",
-                            xanchor = "right",
-                            yanchor = "bottom",
-                            pad = list(t = 0, r = 0, b = 10)))
-
+         legend = list(title = "", orientation = "h"))
 ```
 
 ---
 
-Songs I like seems to be **louder** than song I dislike.
+Musical preferences are complex and can be influenced by various factors, including the loudness of a musical piece. Loudness is an essential characteristic of music that can affect how it is perceived by the listener. It refers to the volume or intensity of a musical piece and is typically measured in decibels.
+
+The plot that highlights the difference in loudness between songs that I like and songs that I dislike may provide insight into how loudness influences my musical preferences. The plot may indicate that my preferred songs tend to be louder than songs that I dislike, suggesting that loudness is an essential characteristic of my musical taste. However, it is crucial to remember that loudness is just one factor that can influence musical preferences.
 
 Track-Level Summary {data-icon="fa-chart-bar"}
 =====================================
@@ -306,13 +290,15 @@ Overview
 
 ### Outliers
 
-The selection of an appropriate corpus is essential to effectively achieve research objectives. In this study, a broad corpus was chosen that included diverse data related to the research question. However, the large volume of data made it difficult to identify significant patterns or trends that could adequately address the research question.
+In any research study, selecting an appropriate corpus is crucial in effectively achieving the research objectives. In the present study, a broad corpus was chosen, which included diverse data related to the research question. However, the large volume of data made it challenging to identify significant patterns or trends that could adequately address the research question.
 
 To overcome this challenge, the decision was made to focus on the outliers in the corpus. Specifically, the analysis focused on the extreme cases that were most divergent from the norm in terms of a specific timbre component. This approach allowed for the isolation and study of the outliers, leading to valuable insights and a better understanding of the factors contributing to their unique timbre characteristics. Ultimately, this approach strengthened the analysis and enhanced the quality of the research findings.
 
-Timbre, the quality of sound that distinguishes different musical instruments, is a crucial aspect of music. The analysis of timbre is often performed using spectral content, which measures the relative strengths of various frequency components that make up the sound. In this study, the focus was on a specific timbre component, which was used to isolate and study the outliers in the corpus.
+In this study, timbre, the quality of sound that distinguishes different musical instruments, was analyzed using spectral content, which measures the relative strengths of various frequency components that make up the sound. The study focused on a specific timbre component, which was used to isolate and study the outliers in the corpus.
 
-By examining the c2 tab, it can be observed that there are four outliers, with two in each playlist. Specifically, in the **'Songs I like'** playlist, the song 'What I like About You' exhibits the highest timbre in the c02 vector, whereas 'The Sailor's Warning' has the lowest. In contrast, in the **'Songs I dislike'** playlist, 'Murder' has the highest timbre in the c02 vector, while '19 Tini 5' has the lowest.
+To further investigate this approach, tables were generated to identify the maximum and minimum values of specific timbre components for each playlist. The tables for the maximum and minimum values of c01, c02, c03, and c04 for both the 'Songs I like' and 'Songs I dislike' playlists showed notable differences in timbre components between the two playlists. For example, the table of maximum and minimum values of c02 for each playlist showed that the highest and lowest timbre values for 'Songs I like' were exhibited by the songs ['What I Like About You'](https://open.spotify.com/track/4ebcE2SmkG7nplvzFAWRu7?si=c432fccad51845ae), and ['The Sailor’s Warning'](https://open.spotify.com/track/3bgmoyCHa6v3bMMsgK1rWh?si=d7b40ddaef5344a1), respectively, while the highest and lowest timbre values for 'Songs I dislike' were exhibited by the songs ['Murder'](https://open.spotify.com/track/0wFPKFtBes3NTyTW4bkjrz?si=796b185ece5d4a75) and ['19 Tini 5'](https://open.spotify.com/track/73myy2XXpvC2bHi4Fikksr?si=775791f95d43461a), respectively.
+
+These tables provide insight into how specific timbre components differ between songs that I like and songs that I dislike, which helps to support the approach of focusing on the outliers in the corpus to gain valuable insights into timbre characteristics.
 
 Column 2 {.tabset}
 --------------------------------------------------
@@ -409,26 +395,26 @@ knitr::kable(table_c04, caption = "Table of maximum and minimum values of c04 fo
 Chromagrams {data-icon="fa-music"}
 =====================================
 
-Overview
+Column 1
 --------------------------------------------------
 
-### Chart A
+###
 
 A chromagram is a visual representation of the distribution of pitches in a musical recording. Comparing the chromagrams of two songs, "State of Unrest" from the playlist of disliked songs and "Shut up and Dance" from the playlist of liked songs, reveals interesting differences in their pitch distribution. In "State of Unrest," there is a strong concentration of pitches around the D chord, indicating a relatively stable harmonic structure. On the other hand, "Shut up and Dance" shows more variation in pitch distribution, with a wider range of pitches around the F#, G#, and A# chords. This suggests that "Shut up and Dance" has a more complex harmonic structure with more varied chord progressions. These differences in pitch distribution could contribute to the overall appeal of the songs and could be further explored in future analyses.
 
 Column 2
 --------------------------------------------------
 
-### State of Unrest
+###
 
 ```{r chromagram1}
-metal <-
-  get_tidy_audio_analysis("3u4djE2yAEkKMWJEUOOJyT") |>
+wilay <-
+  get_tidy_audio_analysis("4ebcE2SmkG7nplvzFAWRu7") |>
   select(segments) |>
   unnest(segments) |>
   select(start, duration, pitches)
 
-chromogram1 <- metal |>
+chromogram1 <- wilay |>
   mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
   compmus_gather_chroma() |> 
   ggplot(
@@ -440,39 +426,25 @@ chromogram1 <- metal |>
     )
   ) +
   geom_tile() +
+  ggtitle("Chromagram - The Romantics: 'What I Like About You'") +
+  scale_fill_gradientn(colors = random_palette) +
   labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
   theme_minimal() +
-  scale_fill_viridis_c()
+  scale_color_gradientn(colors = random_palette)
 
-ggplotly(chromogram1, tooltip = "none", source = "none") %>%
-  layout(
-    annotations = list(
-      list(
-        x = 1, y = -0.18,
-        text = "Data source: Spotify API\nAuthor: Roan van Blanken",
-        showarrow = FALSE,
-        xref = "paper",
-        yref = "paper",
-        font = list(size = 10),
-        align = "right",
-        xanchor = "right",
-        yanchor = "bottom",
-        pad = list(t = 0, r = 0, b = 10)
-      )
-    )
-  )
+ggplotly(chromogram1, tooltip = "none", source = "none")
 ```
 
-### Shut Up and Dance
+###
 
 ```{r chromagram 2}
-dancewm <-
-  get_tidy_audio_analysis("0kzw2tRyuL9rzipi5ntlIy") |>
+murder <-
+  get_tidy_audio_analysis("0wFPKFtBes3NTyTW4bkjrz") |>
   select(segments) |>
   unnest(segments) |>
   select(start, duration, pitches)
 
-chromogram2 <- dancewm |>
+chromogram2 <- murder |>
   mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
   compmus_gather_chroma() |> 
   ggplot(
@@ -484,27 +456,13 @@ chromogram2 <- dancewm |>
     )
   ) +
   geom_tile() +
+  ggtitle("Chromagram - DJ Squeeky, Tom Skeemask, GK: 'Murder'") +
+  scale_fill_gradientn(colors = random_palette) +
   labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
   theme_minimal() +
-  scale_fill_viridis_c()
+  scale_color_gradientn(colors = random_palette)
 
-ggplotly(chromogram2, tooltip = "none", source = "none") %>%
-  layout(
-    annotations = list(
-      list(
-        x = 1, y = -0.18,
-        text = "Data source: Spotify API\nAuthor: Roan van Blanken",
-        showarrow = FALSE,
-        xref = "paper",
-        yref = "paper",
-        font = list(size = 10),
-        align = "right",
-        xanchor = "right",
-        yanchor = "bottom",
-        pad = list(t = 0, r = 0, b = 10)
-      )
-    )
-  )
+ggplotly(chromogram2, tooltip = "none", source = "none")
 ```
 
 Ceptrograms {data-icon="fa-headphones-alt"}
