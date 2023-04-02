@@ -300,7 +300,7 @@ The plot that highlights the difference in loudness between songs that I like an
 
 It is worth noting that loudness is not always a reliable indicator of a songs quality or emotional impact. A quiet ballad or a soothing instrumental piece can be just as powerful and moving as a loud and energetic track. Therefore, while loudness may be an important characteristic of my preferred songs, it should not be the only factor considered when evaluating the quality or emotional impact of a musical piece.
 
-Track-Level Summary {data-icon="fa-diagram-venn"}
+Track-Level Summary {data-icon="fa-chart-line"}
 =====================================
 
 Overview
@@ -731,7 +731,7 @@ ggplotly(ssm4, tooltip = "none", source = "none")
 ```
 
 
-Trained Model {.storyboard data-icon="fa-solid fa-network-wired"}
+Trained Model {.storyboard data-icon="fa-cogs"}
 =====================================
 
 ### Unlocking the secrets of my playlist: A decision tree classification model investigation
@@ -930,7 +930,7 @@ pr2 <- nmf_conf_mat[["table"]] |> get_pr2()
 knitr::kable(pr2, caption = "Precision and Recall of the Decision Tree classifying the 'New Music Friday (NL)' playlist from Spotify")
 ```
 
-Conclusion {data-icon="ion-document"}
+Conclusion {data-icon="fa-comments"}
 =====================================
 
 Column 1
