@@ -6,6 +6,8 @@ library(spotifyr)
 library(compmus)
 library(rpart)
 library(rpart.plot)
+library(yardstick)
+library(RColorBrewer)
 
 get_conf_mat <- function(fit) {
   outcome <- .get_tune_outcome_names(fit)
@@ -23,6 +25,16 @@ get_pr <- function(fit) {
     select(class = Prediction, precision, recall)
 }  
 
+get_pr2 <- function(cm) {
+  true_positives <- diag(cm)
+  false_positives <- colSums(cm) - true_positives
+  false_negatives <- rowSums(cm) - true_positives
+  precision <- true_positives / (true_positives + false_positives)
+  recall <- true_positives / (true_positives + false_negatives)
+  class_labels <- rownames(cm)
+  tibble(class = class_labels, precision = precision, recall = recall)
+}
+
 # Get playlists
 songs_i_like <- get_playlist_audio_features("", "6pl0C7qbIl5uoY3Tdf82oa")
 
@@ -34,75 +46,83 @@ songs_i_dislike <- get_playlist_audio_features("", "4bJQX5w7W4wEnHLmWqUIVY")
 songs_i_dislike <- songs_i_dislike %>%
   mutate(mode = ifelse(mode == 0, "Minor", "Major"))
 
-new_music_friday_sil <- get_playlist_audio_features("", "5w3YQiVAfcfCIhQ1wnWael") %>%
-  mutate(mode = ifelse(mode == 0, "Minor", "Major"))
+# new_music_friday_sil <- get_playlist_audio_features("", "5w3YQiVAfcfCIhQ1wnWael") %>%
+#   mutate(mode = ifelse(mode == 0, "Minor", "Major"))
+# 
+# new_music_friday_sid <- get_playlist_audio_features("", "307LwouWuqsCBAwq9FYmYU") %>%
+#   mutate(mode = ifelse(mode == 0, "Minor", "Major"))
+# 
+# new_music_friday <-
+#   bind_rows(
+#     new_music_friday_sil |> mutate(playlist = "Songs I like"),
+#     new_music_friday_sid |> mutate(playlist = "Song I dislike")) |> 
+#   add_audio_analysis() 
+# 
+# saveRDS(new_music_friday, file="data/Model (new_music_friday).Rda")
 
-new_music_friday_sid <- get_playlist_audio_features("", "307LwouWuqsCBAwq9FYmYU") %>%
-  mutate(mode = ifelse(mode == 0, "Minor", "Major"))
+new_music_friday <- readRDS(file="data/Model (new_music_friday).Rda")
 
-new_music_friday <-
-  bind_rows(
-    new_music_friday_sil |> mutate(playlist = "Songs I like"),
-    new_music_friday_sid |> mutate(playlist = "Song I dislike")) |> 
-  add_audio_analysis() 
+# new_music_friday_features <-
+#   new_music_friday |>  # For your portfolio, change this to the name of your corpus.
+#   mutate(
+#     playlist = factor(playlist),
+#     segments = map2(segments, key, compmus_c_transpose),
+#     pitches =
+#       map(
+#         segments,
+#         compmus_summarise, pitches,
+#         method = "mean", norm = "manhattan"
+#       ),
+#     timbre =
+#       map(
+#         segments,
+#         compmus_summarise, timbre,
+#         method = "mean",
+#       )
+#   ) |>
+#   mutate(pitches = map(pitches, compmus_normalise, "clr")) |>
+#   mutate_at(vars(pitches, timbre), map, bind_rows) |>
+#   unnest(cols = c(pitches, timbre))
 
-saveRDS(new_music_friday, file="data/Model (new_music_friday).Rda")
+# saveRDS(new_music_friday_features, file="data/Model (new_music_friday_features).Rda")
 
-new_music_friday_features <-
-  new_music_friday |>  # For your portfolio, change this to the name of your corpus.
-  mutate(
-    playlist = factor(playlist),
-    segments = map2(segments, key, compmus_c_transpose),
-    pitches =
-      map(
-        segments,
-        compmus_summarise, pitches,
-        method = "mean", norm = "manhattan"
-      ),
-    timbre =
-      map(
-        segments,
-        compmus_summarise, timbre,
-        method = "mean",
-      )
-  ) |>
-  mutate(pitches = map(pitches, compmus_normalise, "clr")) |>
-  mutate_at(vars(pitches, timbre), map, bind_rows) |>
-  unnest(cols = c(pitches, timbre))
+new_music_friday_features <- readRDS(file="data/Model (new_music_friday_features).Rda")
 
-saveRDS(new_music_friday_features, file="data/Model (new_music_friday_features).Rda")
+# corpus <-
+#   bind_rows(
+#     songs_i_like |> mutate(playlist = "Songs I like"),
+#     songs_i_dislike |> mutate(playlist = "Song I dislike")) |> 
+#   add_audio_analysis()
+# 
+# saveRDS(corpus, file="data/Model (corpus).Rda")
 
-model <-
-  bind_rows(
-    songs_i_like |> mutate(playlist = "Songs I like"),
-    songs_i_dislike |> mutate(playlist = "Song I dislike")) |> 
-  add_audio_analysis()
+corpus <- readRDS(file="data/Model (corpus).Rda")
 
-model_features <-
-  model |>  # For your portfolio, change this to the name of your corpus.
-  mutate(
-    playlist = factor(playlist),
-    segments = map2(segments, key, compmus_c_transpose),
-    pitches =
-      map(
-        segments,
-        compmus_summarise, pitches,
-        method = "mean", norm = "manhattan"
-      ),
-    timbre =
-      map(
-        segments,
-        compmus_summarise, timbre,
-        method = "mean",
-      )
-  ) |>
-  mutate(pitches = map(pitches, compmus_normalise, "clr")) |>
-  mutate_at(vars(pitches, timbre), map, bind_rows) |>
-  unnest(cols = c(pitches, timbre))
+# corpus_features <-
+#   corpus |>  # For your portfolio, change this to the name of your corpus.
+#   mutate(
+#     playlist = factor(playlist),
+#     segments = map2(segments, key, compmus_c_transpose),
+#     pitches =
+#       map(
+#         segments,
+#         compmus_summarise, pitches,
+#         method = "mean", norm = "manhattan"
+#       ),
+#     timbre =
+#       map(
+#         segments,
+#         compmus_summarise, timbre,
+#         method = "mean",
+#       )
+#   ) |>
+#   mutate(pitches = map(pitches, compmus_normalise, "clr")) |>
+#   mutate_at(vars(pitches, timbre), map, bind_rows) |>
+#   unnest(cols = c(pitches, timbre))
+# 
+# saveRDS(corpus_features, file="data/Model (corpus_features).Rda")
 
-saveRDS(model_features, file="data/Model (model_features).Rda")
-
-model_features <- readRDS(file="data/Model (model_features).Rda")
+corpus_features <- readRDS(file="data/Model (corpus_features).Rda")
 
 corpus_recipe <-
   recipe(
@@ -117,11 +137,11 @@ corpus_recipe <-
       valence +
       tempo +
       duration,
-    data = model_features           # Use the same name as the previous block.
+    data = corpus_features           # Use the same name as the previous block.
   ) |>
   step_center(all_predictors()) |>
-  step_scale(all_predictors()) |>   # Converts to z-scores.
-  step_range(all_predictors())      # Sets range to [0, 1].
+  step_scale(all_predictors()) |>    # Converts to z-scores.
+  step_range(all_predictors())       # Sets range to [0, 1].
 
 new_music_friday_recipe <-
   recipe(
@@ -136,13 +156,13 @@ new_music_friday_recipe <-
       valence +
       tempo +
       duration,
-    data = new_music_friday_features           # Use the same name as the previous block.
+    data = new_music_friday_features # Use the same name as the previous block.
   ) |>
   step_center(all_predictors()) |>
-  step_scale(all_predictors()) |>   # Converts to z-scores.
-  step_range(all_predictors())      # Sets range to [0, 1].
+  step_scale(all_predictors()) |>    # Converts to z-scores.
+  step_range(all_predictors())       # Sets range to [0, 1].
 
-corpus_cv <- model_features |> vfold_cv(5)
+corpus_cv <- corpus_features |> vfold_cv(5)
 
 knn_model <-
   nearest_neighbor(neighbors = 1) |>
@@ -157,11 +177,17 @@ corpus_knn <-
 
 corpus_knn |> get_conf_mat()
 
-corpus_knn |> get_conf_mat() |> autoplot(type = "mosaic")
+corpus_knn |> get_conf_mat() |> 
+  autoplot(type = "mosaic") + 
+  scale_fill_gradientn(colors = brewer.pal(9, "Blues"))
 
-corpus_knn |> get_conf_mat() |> autoplot(type = "heatmap")
+corpus_knn |> get_conf_mat() |> 
+  autoplot(type = "heatmap") + 
+  scale_fill_gradientn(colors = brewer.pal(9, "Blues"))
 
 corpus_knn |> get_pr()
+
+# ----------------------
 
 # Create a decision tree model
 decision_tree_model <-
@@ -213,8 +239,9 @@ nmf_conf_mat |> autoplot(type = "mosaic")
 # Plot confusion matrix as heatmap
 nmf_conf_mat |> autoplot(type = "heatmap")
 
-overview <- bind_cols(new_music_friday_features %>% select(track.name), nmf_pred)
+nmf_conf_mat[["table"]] |> get_pr2()
 
+overview <- bind_cols(new_music_friday_features %>% select(track.name), nmf_pred)
 
 
 # Fit the decision tree model without cross-validation
@@ -229,3 +256,20 @@ rpart_obj <- corpus_decision_tree_no_cv %>% pull_workflow_fit() %>% pluck("fit")
 
 # Plot the decision tree
 rpart.plot(rpart_obj, type = 1, extra = 101, cex = 0.8, box.palette = "auto", tweak = 1.2, roundint = FALSE)
+
+# Display confusion matrix as heatmap
+heatmap1 <- corpus_decision_tree |> get_conf_mat() |>
+  autoplot(type = "heatmap") + 
+  scale_fill_gradientn(colors = brewer.pal(9, "Blues"))
+
+# Get precision and recall
+pr <- corpus_decision_tree |> get_pr()
+
+# Display table of precision and recall
+pr_table  <- knitr::kable(pr, caption = "Precision and Recall for Decision Tree")
+
+# Convert the table to a grob
+pr_table_grob <- tableGrob(pr_table)
+
+# Arrange the plot and table side by side
+grid.arrange(heatmap1, pr_table_grob, ncol = 2)

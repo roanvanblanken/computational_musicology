@@ -5,18 +5,27 @@ output:
   flexdashboard::flex_dashboard:
     orientation: columns
     self_contained: false
+    
 ---
 
 ```{r setup, include=FALSE}
-library(flexdashboard)
-library(spotifyr)
-library(purrr)
-library(dplyr)
-library(ggplot2)
-library(plotly)
-library(tidyverse)
 library(compmus)
+library(dplyr)
+library(flexdashboard)
 library(fontawesome)
+library(ggdendro)
+library(ggplot2)
+library(gridExtra)
+library(heatmaply)
+library(plotly)
+library(purrr)
+library(RColorBrewer)
+library(rpart)
+library(rpart.plot)
+library(spotifyr)
+library(tidymodels)
+library(tidyverse)
+library(yardstick)
 
 # Get playlists
 songs_i_like <- get_playlist_audio_features("", "6pl0C7qbIl5uoY3Tdf82oa")
@@ -126,35 +135,44 @@ key_templates <-
 Introduction {data-icon="fa-spotify"}
 =====================================
 
-Column {data-width=500}
+Column {data-width=550}
 -----------------------------------------------------------------------
 
-### Introduction
+###
+
+**Introduction:**
 
 Music is an essential part of many people's lives, and with digital music streaming platforms like Spotify, discovering new music has become more accessible than ever. Spotify's algorithm suggests playlists based on users' listening habits and preferences. One of the most popular playlists on Spotify is "New Music Friday," updated every week with new releases from various artists. It is curated by Spotify's editorial team, who select the latest and most popular releases from various genres. However, the question remains: how accurately does this playlist align with personal musical taste and style?
 
-This final portfolio explores the inner workings of Spotify's music recommendation algorithm, attempting to create a predictive model that accurately predicts a user's preferred musical genres and styles. The analysis will focus on two playlists - "Songs I Like" and "Songs I Dislike" - to identify patterns in personal musical taste. The "Songs I Like" playlist is a collection of songs that hold personal meaning, representing various genres such as pop, 70s, 80s, 90s musical, and rock. In contrast, the "Songs I Dislike" playlist consists of heavy metal and drill rap songs that do not match personal taste.
+As a student and an avid music lover, I have always been curious about the mechanics behind music recommendations. This final portfolio explores the inner workings of Spotify's music recommendation algorithm, attempting to create a predictive model that accurately predicts a user's preferred musical genres and styles. The analysis will focus on two playlists - "Songs I Like" and "Songs I Dislike" - to identify patterns in personal musical taste. The "Songs I Like" playlist is a collection of songs that hold personal meaning, representing various genres such as pop, 70s, 80s, 90s musical, and rock. In contrast, the "Songs I Dislike" playlist consists of heavy metal and drill rap songs that do not match personal taste.
 
-By analyzing the features of songs in both playlists, this portfolio aims to provide insights into personal musical preferences and use this information to train a machine learning model. The goal is to create a predictive model that accurately predicts preferred musical genres and styles. Additionally, the analysis will investigate whether this model can predict which songs from popular playlists like "New Music Friday" would resonate with the user, allowing for a more personalized and tailored listening experience.
+By analysing the features of songs in both playlists, this portfolio aims to provide insights into personal musical preferences and use this information to train a machine learning model. The goal is to create a predictive model that accurately predicts preferred musical genres and styles. Additionally, the analysis will investigate whether this model can predict which songs from popular playlists like "New Music Friday" would resonate with the user, allowing for a more personalized and tailored listening experience.
 
-In summary, this portfolio tries to offer an understanding of Spotify's music recommendation algorithm and the potential for using machine learning to predict a user's preferred musical genres and styles.
+**Background:**
 
-Column {data-width=250}
+The tracks chosen for this portfolio come from a personal selection of songs representing the music I enjoy and the genres I tend to avoid. This decision was made to provide a diverse and authentic dataset for the machine learning model. By examining these songs, the portfolio seeks to answer the following questions:
+
+1. What are the key features that differentiate songs from the "Songs I Like" and "Songs I Dislike" playlists?
+2. Can a machine learning model be trained to predict personal musical preferences based on these features?
+3. How effectively can the trained model predict which songs from popular playlists, such as "New Music Friday," will align with my personal taste?
+
+
+Column {data-width=225}
 -----------------------------------------------------------------------
 
-### Corpus: Songs I like
+###
 
-iframe src="https://open.spotify.com/embed/playlist/6pl0C7qbIl5uoY3Tdf82oa?utm_source=generator" width="100%" height="100%" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+<iframe src="https://open.spotify.com/embed/playlist/6pl0C7qbIl5uoY3Tdf82oa?utm_source=generator" width="100%" height="100%" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
 
 
-Column {data-width=250}
+Column {data-width=225}
 -----------------------------------------------------------------------
 
-### Corpus: Songs I dislike
+###
 
-iframe src="https://open.spotify.com/embed/playlist/4bJQX5w7W4wEnHLmWqUIVY?utm_source=generator&theme=0" width="100%" height="100%" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+<iframe src="https://open.spotify.com/embed/playlist/4bJQX5w7W4wEnHLmWqUIVY?utm_source=generator&theme=0" width="100%" height="100%" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
 
-Feature analysis {.storyboard data-icon="fa-magnifying-glass"}
+Feature analysis {.storyboard data-icon="fa-chart-bar"}
 =====================================
 
 ### Relationship between Valence, Energy, Loudness, and Mode for the songs I like 
@@ -171,16 +189,14 @@ songs_i_like %>%
   theme_light() +
   labs(x = "Valence", y = "Energy",
        title = "Songs I like",
-       subtitle = "Plotting valence, energy, and loudness",
-       caption = "Data source: Spotify API\nAuthor: Roan van Blanken")
-
+       subtitle = "Plotting valence, energy, and loudness")
 ```
 
 ---
 
 Spotify's track-level features, such as valence, danceability, energy, and loudness, offer valuable insights into the underlying patterns of my personal music preferences. I selected these features as they are commonly used to describe the overall mood, intensity, and emotional tone of a song, allowing us to better understand the characteristics that define the songs I like and dislike [(Serra et al.)](https://pubmed.ncbi.nlm.nih.gov/22837813/). By examining these features, we can gain a deeper understanding of the traits that influence my musical taste.
 
-Based on the first scatterplot, it seems like I tend to like songs that are loud, with a range of loudness values represented in the plot. I also seem to be drawn to songs that are high-energy, as they're clustered towards the upper-right portion of the plot where both the energy and loudness values are high.
+Based on the first scatterplot, it seems like I tend to like songs that are loud. I also seem to be drawn to songs that are high-energy, as they're clustered towards the upper portion of the plot where the energy values are high.
 
 As for the valence of the songs I like, it appears to be centered around 0.5, but mostly falls between 0.5 and 1.0. This suggests that I tend to prefer songs with a positive emotional valence, which could contribute to their appeal.
 
@@ -200,8 +216,7 @@ songs_i_dislike %>%
   theme_light() +
   labs(x = "Valence", y = "Energy",
        title = "Songs I dislike",
-       subtitle = "Plotting valence, energy, loudness, and mode",
-       caption = "Data source: Spotify API\nAuthor: Roan van Blanken")
+       subtitle = "Plotting valence, energy, loudness, and mode")
 ```
 
 ---
@@ -210,7 +225,8 @@ Looking at the scatterplot of songs I don't like, I can see that they're usually
 
 It's interesting to see that, just like the songs I like, the songs I don't like are spread out pretty evenly between major and minor keys. This tells me that the key of a song doesn't really play a big role in whether I like it or not.
 
-Another thing I noticed is that the songs I don't like seem to have a smaller range of loudness and energy compared to the songs I do like. This could mean that I'm more open to different levels of intensity and dynamics when it comes to music I enjoy, while the music I don't like might have more in common in terms of how loud and energetic they are.
+Another thing I noticed is that the songs I don't like seem to have a smaller range of energy compared to the songs I do like. This could mean that I'm more open to different levels of intensity and dynamics when it comes to music I enjoy, while the music I don't like might have more in common in terms of how energetic they are.
+
 
 ### Zooming in on Valence
 
@@ -284,23 +300,23 @@ The plot that highlights the difference in loudness between songs that I like an
 
 It is worth noting that loudness is not always a reliable indicator of a songs quality or emotional impact. A quiet ballad or a soothing instrumental piece can be just as powerful and moving as a loud and energetic track. Therefore, while loudness may be an important characteristic of my preferred songs, it should not be the only factor considered when evaluating the quality or emotional impact of a musical piece.
 
-Track-Level Summary {data-icon="fa-chart-bar"}
+Track-Level Summary {data-icon="fa-diagram-venn"}
 =====================================
 
 Overview
 --------------------------------------------------
 
-### Outliers
+###
 
-In any research study, selecting an appropriate corpus is crucial in effectively achieving the research objectives. In the present study, a broad corpus was chosen, which included diverse data related to the research question. However, the large volume of data made it challenging to identify significant patterns or trends that could adequately address the research question.
+In any portfolio, selecting appropriate samples is crucial in effectively achieving the portfolio objectives. In the present portfolio, a broad range of samples was chosen, including diverse data related to the research question. However, the large volume of data made it challenging to identify significant patterns or trends that could adequately address the research question.
 
-To overcome this challenge, the decision was made to focus on the outliers in the corpus. Specifically, the analysis focused on the extreme cases that were most divergent from the norm in terms of a specific timbre component. This approach allowed for the isolation and study of the outliers, leading to valuable insights and a better understanding of the factors contributing to their unique timbre characteristics. Ultimately, this approach strengthened the analysis and enhanced the quality of the research findings.
+To overcome this challenge, the decision was made to focus on the outliers in the portfolio. Specifically, the analysis focused on the extreme cases that were most divergent from the norm in terms of a specific component. This approach allowed for the isolation and study of the outliers, leading to valuable insights and a better understanding of the factors contributing to their unique characteristics. Ultimately, this approach strengthened the analysis and enhanced the quality of the portfolio.
 
-In this study, timbre, the quality of sound that distinguishes different musical instruments, was analyzed using spectral content, which measures the relative strengths of various frequency components that make up the sound. The study focused on a specific timbre component, which was used to isolate and study the outliers in the corpus.
+In this portfolio, timbre, the quality of sound that distinguishes different musical instruments, was analyzed using spectral content, which measures the relative strengths of various frequency components that make up the sound. The portfolio focused on a specific timbre component, which was used to isolate and study the outliers in the samples.
 
-To further investigate this approach, tables were generated to identify the maximum and minimum values of specific timbre components for each playlist. The tables for the maximum and minimum values of c01, c02, c03, and c04 for both the 'Songs I like' and 'Songs I dislike' playlists showed notable differences in timbre components between the two playlists. For example, the table of maximum and minimum values of c02 for each playlist showed that the highest and lowest timbre values for 'Songs I like' were exhibited by the songs ['What I Like About You'](https://open.spotify.com/track/4ebcE2SmkG7nplvzFAWRu7?si=c432fccad51845ae), and ['The Sailor’s Warning'](https://open.spotify.com/track/3bgmoyCHa6v3bMMsgK1rWh?si=d7b40ddaef5344a1), respectively, while the highest and lowest timbre values for 'Songs I dislike' were exhibited by the songs ['Murder'](https://open.spotify.com/track/0wFPKFtBes3NTyTW4bkjrz?si=796b185ece5d4a75) and ['19 Tini 5'](https://open.spotify.com/track/73myy2XXpvC2bHi4Fikksr?si=775791f95d43461a), respectively.
+To further investigate this approach, tables were generated to identify the maximum and minimum values of specific timbre components for each sample. The tables for the maximum and minimum values of c01, c02, c03, and c04 for both the 'Songs I like' and 'Songs I dislike' samples showed notable differences in timbre components between the two sets of samples. For example, the table of maximum and minimum values of c02 for each set of samples showed that the highest and lowest timbre values for 'Songs I like' were exhibited by the samples ['What I Like About You'](https://open.spotify.com/track/4ebcE2SmkG7nplvzFAWRu7?si=c432fccad51845ae), and ['The Sailor’s Warning'](https://open.spotify.com/track/3bgmoyCHa6v3bMMsgK1rWh?si=d7b40ddaef5344a1), respectively, while the highest and lowest timbre values for 'Songs I dislike' were exhibited by the samples ['Murder'](https://open.spotify.com/track/0wFPKFtBes3NTyTW4bkjrz?si=796b185ece5d4a75) and ['19 Tini 5'](https://open.spotify.com/track/73myy2XXpvC2bHi4Fikksr?si=775791f95d43461a), respectively., respectively.
 
-These tables provide insight into how specific timbre components differ between songs that I like and songs that I dislike, which helps to support the approach of focusing on the outliers in the corpus to gain valuable insights into timbre characteristics.
+These tables provide insight into how specific timbre components differ between the two sets of samples, which helps to support the approach of focusing on the outliers in the portfolio to gain valuable insights into timbre characteristics.
 
 Column 2 {.tabset}
 --------------------------------------------------
@@ -585,7 +601,7 @@ tempogram_2 <- fascination_cyclic |>
 ggplotly(tempogram_2, tooltip = "none", source = "none")
 ```
 
-Self-similarity Matrices {data-icon="fas fa-share-from-square"}
+Self-similarity Matrices {data-icon="fas fa-angle-double-right"}
 =====================================
 
 text over SSM {data-width=500}
@@ -593,7 +609,7 @@ text over SSM {data-width=500}
 
 ###
 
-A self-similarity matrix is a visual representation of the similarity between different sections of a musical recording. This tool allows us to observe and analyze the internal structure of a song in a way that provides valuable insights into its musical composition and arrangement. By comparing the self-similarity matrices of two songs, one I like a lot and one I dislike, ["State of Unrest"](https://open.spotify.com/track/3u4djE2yAEkKMWJEUOOJyT?si=1230a654e318462a) and ["Shut Up and Dance"](https://open.spotify.com/track/4kbj5MwxO1bq9wjT5g9HaA?si=caf4a51f4d4645c4) in both timbre and chroma, we can gain a deeper understanding of how these songs are structured and how they differ from each other.
+A self-similarity matrix is a visual representation of the similarity between different sections of a musical recording. This tool allows us to observe and analyze the internal structure of a song in a way that provides valuable insights into its musical composition and arrangement. By comparing the self-similarity matrices of two songs, one I like a lot and one I dislike, ["Shut Up and Dance"](https://open.spotify.com/track/4kbj5MwxO1bq9wjT5g9HaA?si=caf4a51f4d4645c4) and ["State of Unrest"](https://open.spotify.com/track/3u4djE2yAEkKMWJEUOOJyT?si=1230a654e318462a) in both timbre and chroma, we can gain a deeper understanding of how these songs are structured and how they differ from each other.
 
 When analyzing the self-similarity matrix for the timbral characteristics of the songs, we can see variations in the repetition of certain musical motifs. These motifs could be rhythmic patterns, melodies, or harmonies that repeat throughout the song, providing a sense of continuity and coherence. In the case of "State of Unrest" and "Shut Up and Dance," we can see that the two songs differ in terms of the frequency and regularity of these motifs. "Shut Up and Dance" has a more consistent and structured pattern of repetition, while "State of Unrest" has a less predictable and more sporadic one.
 
@@ -714,29 +730,204 @@ ssm4 <- shutupanddance_timbre |>
 ggplotly(ssm4, tooltip = "none", source = "none")
 ```
 
-Trained Model {data-icon="ion-options-outline}
+
+Trained Model {.storyboard data-icon="fa-solid fa-network-wired"}
 =====================================
 
-Overview
---------------------------------------------------
+### Unlocking the secrets of my playlist: A decision tree classification model investigation
 
-### Chart A
+```{r display the decision tree, fig.width = 8, fig.height = 5, out.width = "100%", out.height = "100%"}
+get_conf_mat <- function(fit) {
+  outcome <- .get_tune_outcome_names(fit)
+  fit |> 
+    collect_predictions() |> 
+    conf_mat(truth = outcome, estimate = .pred_class)
+}  
 
-WIP
+get_pr <- function(fit) {
+  fit |> 
+    conf_mat_resampled() |> 
+    group_by(Prediction) |> mutate(precision = Freq / sum(Freq)) |> 
+    group_by(Truth) |> mutate(recall = Freq / sum(Freq)) |> 
+    ungroup() |> filter(Prediction == Truth) |> 
+    select(class = Prediction, precision, recall)
+}  
 
-Column 2
---------------------------------------------------
+get_pr2 <- function(cm) {
+  true_positives <- diag(cm)
+  false_positives <- colSums(cm) - true_positives
+  false_negatives <- rowSums(cm) - true_positives
+  precision <- true_positives / (true_positives + false_positives)
+  recall <- true_positives / (true_positives + false_negatives)
+  class_labels <- rownames(cm)
+  tibble(class = class_labels, precision = precision, recall = recall)
+}
 
-### 
+# see make_model.R
+new_music_friday <- readRDS(file="data/Model (new_music_friday).Rda")
+new_music_friday_features <- readRDS(file="data/Model (new_music_friday_features).Rda")
+corpus <- readRDS(file="data/Model (corpus).Rda")
+corpus_features <- readRDS(file="data/Model (corpus_features).Rda")
 
-```{r trained_model_1}
+corpus_recipe <-
+  recipe(
+    playlist ~
+      danceability +
+      energy +
+      loudness +
+      speechiness +
+      acousticness +
+      instrumentalness +
+      liveness +
+      valence +
+      tempo +
+      duration,
+    data = corpus_features           # Use the same name as the previous block.
+  ) |>
+  step_center(all_predictors()) |>
+  step_scale(all_predictors()) |>    # Converts to z-scores.
+  step_range(all_predictors())       # Sets range to [0, 1].
 
+new_music_friday_recipe <-
+  recipe(
+    playlist ~
+      danceability +
+      energy +
+      loudness +
+      speechiness +
+      acousticness +
+      instrumentalness +
+      liveness +
+      valence +
+      tempo +
+      duration,
+    data = new_music_friday_features # Use the same name as the previous block.
+  ) |>
+  step_center(all_predictors()) |>
+  step_scale(all_predictors()) |>    # Converts to z-scores.
+  step_range(all_predictors())       # Sets range to [0, 1].
+
+corpus_cv <- corpus_features |> vfold_cv(5)
+
+# Create a decision tree model
+decision_tree_model <-
+  decision_tree(tree_depth = 3, min_n = 25) |> 
+  set_mode("classification") |> 
+  set_engine("rpart")
+
+# Fit the decision tree model with cross-validation
+corpus_decision_tree <- 
+  workflow() |> 
+  add_recipe(corpus_recipe) |> 
+  add_model(decision_tree_model) |> 
+  fit_resamples(corpus_cv, control = control_resamples(save_pred = TRUE))
+
+# Fit the decision tree model without cross-validation
+corpus_decision_tree_no_cv <- 
+  workflow() |> 
+  add_recipe(corpus_recipe) |> 
+  add_model(decision_tree_model) |> 
+  fit(data = corpus_features)
+
+# Extract the rpart object
+rpart_obj <- corpus_decision_tree_no_cv %>% pull_workflow_fit() %>% pluck("fit")
+
+# Plot the decision tree
+rpart.plot(rpart_obj, type = 1, extra = 101, cex = 0.8, box.palette = "auto", tweak = 1.2, roundint = FALSE, main = "Decision tree trained on the corpus")
 ```
 
-### 
+---
 
-```{r trained_model_2}
+Finally, I trained a decision tree classification model on the two playlists ('Songs I like' and 'Songs I dislike'). I used all the features except for key and timbre components, as including them decreased recall and precision. During the analysis, I performed 5 cross-validations to ensure the model's accuracy. As can be seen in the plot, instrumentalness seems to be the most important feature, followed by speechiness. Finally, acousticness and energy are also important. Overall, it can be concluded that I like songs with low instrumentalness, low speechiness, and energy levels below 0.89, as shown in the feature analysis.
 
+### Valuation of model performance using recall and precision metrics
+
+```{r display the stats of the decision tree}
+# Display confusion matrix as heatmap
+heatmap1 <- corpus_decision_tree |> get_conf_mat() |>
+  autoplot(type = "heatmap") + 
+  scale_fill_gradientn(colors = brewer.pal(9, "Blues")) +
+            ggtitle("Confusion Matrix of the model predicting\nlabels on the corpus")
+
+
+heatmap1
+```
+
+---
+
+After training the model, I evaluated its performance by applying it to the original dataset and calculating its recall and precision. Recall is the proportion of true positive predictions (i.e., correctly classified songs I like and songs I dislike) to the total number of actual positive cases, while precision is the proportion of true positive predictions to the total number of predicted positive cases.
+
+The confusion matrix showed that the model performed best at classifying songs I like, but it also had a decent performance in classifying songs I dislike. Overall, the model's accuracy was fairly good, as demonstrated by the table below.
+
+```{r stats}
+# Get precision and recall
+pr <- corpus_decision_tree |> get_pr()
+
+# Display table of precision and recall
+knitr::kable(pr, caption = "Precision and Recall of the Decision Tree classifying the corpus")
+```
+
+### Testing the model on the New Music Friday (NL) Spotify playlist to evaluate its ability to make accurate predictions based on my music preferences
+
+```{r fit the decision tree to new music friday}
+# Fit the decision tree model for new music friday
+nmf_decision_tree <- 
+  workflow() |> 
+  add_recipe(new_music_friday_recipe) |> 
+  add_model(decision_tree_model) |> 
+  fit(data = new_music_friday_features)
+
+# Get predictions from the model
+nmf_predictions <- predict(nmf_decision_tree, new_music_friday_features) 
+
+# Create a tibble with the true and predicted labels
+nmf_pred <- tibble(
+  truth = new_music_friday_features$playlist, 
+  estimate = nmf_predictions$.pred_class
+)
+
+overview <- bind_cols(new_music_friday_features %>% 
+                         select(`Track name` = track.name), 
+                       `Labeled as` = nmf_pred$truth, 
+                       `The model predicted` = nmf_pred$estimate)
+
+
+knitr::kable(overview)
+```
+
+---
+
+As a final test of my decision tree classification model, I wanted to see how it would perform on an unknown playlist. To achieve this, I hand-labeled the first 20 songs of the Spotify playlist 'New Music Friday (NL),' indicating which songs I would like and which ones I would dislike.
+
+Next, I used the model to classify the songs based on their features and compared its predictions to my own labels. The results of this test are shown in the table on the left.
+
+Overall, the model performed well, correctly identifying 15 out of the 20 songs in the playlist as either songs I would like or dislike. This provides further evidence that the model is a useful tool for understanding my music preferences and could be applied to other playlists or datasets.
+
+### Viewing the metrics of the model performance on the New Music Friday (NL) Spotify playlist
+
+```{r display the stats the decision tree fitted to new music friday}
+# Compute the confusion matrix
+nmf_conf_mat <- conf_mat(nmf_pred, truth = truth, estimate = estimate)
+
+# Plot confusion matrix as heatmap
+heatmap2 <- nmf_conf_mat |>
+            autoplot(type = "heatmap", return_ggplot = TRUE) + 
+            scale_fill_gradientn(colors = brewer.pal(9, "Blues")) +
+            ggtitle("Confusion Matrix of the model predicting labels\non the 'New Music Friday' playlist")
+
+heatmap2
+```
+
+---
+
+The results of the previous model performance evaluation can be observed in the data presented here. The analysis indicates that the model was slightly more successful in predicting whether I would like a song, as opposed to predicting whether I would dislike a song. Despite this, the model performed well overall and was able to accurately classify a majority of the songs in the New Music Friday (NL) Spotify playlist.
+
+```{r stats2}
+# Get precision and recall
+pr2 <- nmf_conf_mat[["table"]] |> get_pr2()
+
+# Display table of precision and recall
+knitr::kable(pr2, caption = "Precision and Recall of the Decision Tree classifying the 'New Music Friday (NL)' playlist from Spotify")
 ```
 
 Conclusion {data-icon="ion-document"}
@@ -745,10 +936,31 @@ Conclusion {data-icon="ion-document"}
 Column 1
 --------------------------------------------------
 
-### Conclusion
+###
 
-Based on the insights gained from the feature analysis, it appears that there are clear patterns in the musical features that I find appealing and unappealing in songs. This raises the possibility of developing a classification model to predict whether or not I would like a particular song based on its acoustic features.
+**Conclusion:**
 
-For example, a decision tree model could be trained on a dataset of songs that I have rated as either liked or disliked, using features such as loudness, energy, valence, and mode as predictors. The resulting model could then be used to predict the likelihood of me liking a new song based on its acoustic features.
+After a comprehensive analysis of my music preferences using various tools and techniques, I have gained valuable insights into the factors that influence my musical taste. Through the analysis of chromagrams, ceptrograms, tempograms, and self-similarity matrices, I have been able to observe the harmonic and timbral characteristics of different songs, as well as the impact of tempo and song structure on my preferences.
 
-While the plots provide some valuable insights into the musical features that I find appealing or unappealing, it's important to note that these are just a few of the many features that could potentially influence my musical taste. A more accurate classification model would need to take into account a broader range of features, such as tempo, rhythm, instrumentation, and genre, among others. Additionally, the model would need to be trained on a larger and more diverse set of songs to ensure that it can accurately classify songs that I like or dislike across a wider range of styles and genres. Nevertheless, the insights gained from these plots provide a good starting point for developing a more comprehensive model of my musical taste.
+The results have revealed key features that differentiate between the "Songs I Like" and "Songs I Dislike" playlists, with low instrumentalness, low speechiness, and energy levels below 0.89 being the most important features in songs that I like. Moreover, the analysis of self-similarity matrices showed that I tend to prefer songs with a clear and familiar structure, while also appreciating songs with unconventional arrangements.
+
+The decision tree classification model was successfully trained to predict personal musical preferences based on these identified features. The model was evaluated using the original dataset and was able to accurately classify a majority of the songs into either the "Songs I Like" or "Songs I Dislike" playlists. Furthermore, the model was tested on an unknown playlist ("New Music Friday") and was able to predict which songs would align with my personal taste with a high level of accuracy.
+
+The results of this analysis have implications for music streaming platforms such as Spotify, as they provide insights into users' preferences and allow for more personalized music recommendations. Additionally, music producers and composers could use these conclusions to better understand the elements that make up popular songs and to tailor their compositions to appeal to specific audiences.
+
+Overall, this study has provided me with a better understanding of my music preferences, and has highlighted the importance of various musical features in determining my preferences. The success of the decision tree classification model in predicting my personal musical preferences also demonstrates its potential utility for predicting the preferences of other listeners.
+
+Column 1
+--------------------------------------------------
+
+###
+
+**References:**
+
+Baker, D. J. (@davidjohnbaker1) & Burgoyne, J. A. (@jaburgoyne). (2023). compmus2023. GitHub repository. https://github.com/jaburgoyne/compmus2023
+
+Müller, M. (2015). Fundamentals of music processing: Audio, analysis, algorithms, applications. Springer.
+
+Serrà, J., Corral, Á., Boguñá, M., Haro, M., & Ll Arcos, J. (2012). Measuring the evolution of contemporary western popular music. Scientific Reports, 2, 521. https://doi.org/10.1038/srep00521
+
+spotifyr package. (n.d.). Spotify Developer. Retrieved April 2, 2023, from https://developer.spotify.com/

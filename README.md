@@ -1,14 +1,26 @@
-# computational_musicology - Homework week 6
+# Computational Musicology Project
 
-PLEASE DO NOT SHOW THIS PORTFOLIO IN CLASS MADE IN R
+## Introduction
+This project aims to analyze the musical preferences of an individual and to develop a model to predict their musical taste. The analysis is conducted using various tools and techniques, such as chromagrams, ceptrograms, tempograms, and self-similarity matrices.
 
-My corpus for my final portfolio is a playlist of songs that I have labeled as "Numbers I Like." This playlist contains a diverse range of songs, making it difficult to categorize into a specific genre. The majority of the songs in my playlist fall under the categories of pop, 70s, 80s, 90s musical, and some rock, but there are also elements of other genres present.
+## File Structure
+- `breakouts`: Contains the exercises from the course.
+- `data`: Contains the processed data, including the "New Music Friday" playlist.
+- `index_files`: Contains files made by knitting the index.Rmd file.
+- `.gitignore`: Ignores irrelevant files in the repository.
+- `README.md`: Provides an overview of the project and its file structure.
+- `computational_musicology.Rproj`: The R project file.
+- `index.Rmd`: The main file for the project, containing the analysis and results.
+- `index.html`: The rendered HTML file of the index.Rmd file.
+- `make_ceptrograms.R`: Script to generate ceptrograms.
+- `make_model.R`: Script to train and evaluate the decision tree classification model.
+- `make_self_similarity_matrices.R`: Script to generate self-similarity matrices.
+- `make_tempograms.R`: Script to generate tempograms.
+- `testing.Rmd`: A testing file containing unused code.
+- `testing.html`: The rendered HTML file of the testing.Rmd file.
 
-I chose this playlist as my corpus because it is a collection of songs that hold personal meaning to me. Most of the songs have a specific memory or emotion attached to it, making it a unique and representative representation of my musical taste. 
+## Conclusion
+The analysis of the musical preferences of an individual using various tools and techniques, such as chromagrams, ceptrograms, tempograms, and self-similarity matrices, provided valuable insights into the factors that influence musical taste. The study revealed the key features that differentiate between the "Songs I Like" and "Songs I Dislike" playlists, which can be used by music streaming platforms to provide more personalized music recommendations. Additionally, music producers and composers could use these findings to tailor their compositions to appeal to specific audiences. The decision tree classification model was successfully trained to predict personal musical preferences based on these identified features and can be used for predicting the preferences of other listeners.
 
-One of the interesting aspects of my corpus is the lack of cohesiveness in terms of genre. This allows for a wide range of comparisons to be made, as well as a glimpse into my own  taste. The tracks in my corpus can be compared in terms of popularity, musical style, and cultural significance. I expect that the most popular songs in my playlist will have a different musical style than the less popular ones, and that the songs with cultural significance will be unique in comparison to the others.
-The tracks in my corpus are representative of my personal musical taste, but may not accurately represent the wider musical landscape. The playlist was created through my personal listening habits and does not take into account other sources of music I listen to outside of Spotify.
-
-There are several tracks in my corpus that are either extremely typical or atypical. For example, the song "Bohemian Rhapsody" by Queen is an atypical track in my playlist due to its cultural significance and popularity, compared to other songs in the playlist. On the other hand, a typical track in my playlist may be a pop song that is popular but holds less cultural significance.
-
-In conclusion, my "Numbers I Like" playlist is a unique corpus that represents my personal musical taste, showcasing a diverse range of songs that hold personal meaning. Its nature provides a range of opportunities for comparisons and analyses, allowing for an interesting and reflective final portfolio.
+## Project Status
+The project is complete, and the findings are presented in the `index.Rmd` file. The `README.md` file provides an overview of the project and its file structure.
